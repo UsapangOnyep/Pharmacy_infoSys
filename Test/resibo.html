@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Receipt</title>
+    <style>
+      body {
+        font-family: Helvetica, sans-serif;
+        font-size: 12px;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+      }
+
+      .receipt {
+        width: 100%;
+        max-width: 350px;
+        margin: 0 auto;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        background-color: #fff;
+      }
+
+      .receipt-header {
+        text-align: center;
+        font-size: 16px;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+
+      .receipt-header h3 {
+        font-size: 18px;
+        margin: 0;
+      }
+
+      .receipt-items {
+        margin-bottom: 15px;
+      }
+
+      .receipt-items table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 10px;
+      }
+
+      .receipt-items thead td {
+        padding: 5px;
+        text-align: left;
+      }
+
+      .receipt-items thead {
+        font-weight: bold;
+        border-top: 1px dashed #000;
+        border-bottom: 1px dashed #000;
+      }
+
+      .receipt-items tbody tr {
+        padding: 5px 0 5px 0;
+        text-align: left;
+      }
+
+      .receipt-items tbody {
+        border-bottom: 1px dashed #000;
+      }
+
+      .receipt-items tbody tr td:last-child {
+        text-align: right;
+      }
+
+      .receipt-items tfoot {
+        padding: 5px 0 5px 0;
+        text-align: left;
+        border-bottom: 1px dashed #000;
+      }
+
+      .receipt-items tfoot tr td:last-child {
+        text-align: right;
+      }
+
+      .receipt-item span {
+        width: 30%;
+      }
+
+      .receipt-item-price {
+        text-align: right;
+        width: 40%;
+      }
+
+      .receipt-footer {
+        text-align: center;
+        margin-top: 20px;
+      }
+
+      .receipt-note {
+        font-size: 10px;
+        color: #777;
+        margin-top: 8px;
+        text-align: center;
+        font-style: italic;
+      }
+
+      @media print {
+        body {
+          font-size: 10px;
+        }
+
+        .receipt {
+          width: 100%;
+        }
+      }
+
+      .invoice {
+        font-size: 11pt;
+        padding: 10px;
+        margin: auto;
+      }
+
+      .receipt-data tr td:first-child {
+        width: 100px;
+        text-align: left;
+      }
+
+      .receipt-data tr td:last-child {
+        width: auto;
+        text-align: left;
+      }
+
+      .sales-invoice-title{
+        border-top: 1px dashed #000;
+        text-align: center;
+        margin: auto;
+        border-bottom: 1px dashed #000;
+        padding: 5px;
+
+        margin-bottom: 20px;
+      }
+
+      .pos-details {
+        margin: 30px 0 50px 0;
+        text-align: center;
+      }
+
+      .pos-details table {
+        width: 100%;
+        margin: auto;
+      }
+
+      .cx-data {
+        margin-top: 30px;
+        width: 100%;
+      }
+
+      .cx-data table tr td:first-child{
+        width: 100px;
+      }
+
+      .cx-data table tr td:last-child{
+        width: auto;
+        border-bottom: 1px dashed #000;
+        min-width: 150px;
+      }
+
+    </style>
+  </head>
+
+  <body>
+    <div id="receipt" class="receipt">
+        <div class="pos-details">
+            <table>
+                <thead>
+                    <!-- <tr>
+                        <td>         
+                            <img src="" alt="" width="100px" height="auto">
+                        </td>
+                    </tr> -->
+
+                    <tr>
+                        <td>         
+                            SCIENTIFIC BIOTECH SPECIALTIES, INC.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>         
+                            <address>6023 Sacred Heart, Cor Kamagong</address>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>         
+                            <address>Makati, 1203 Metro Manila</address>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>         
+                            TIN: 201-841-917-0000
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>         
+                            Accreditation#: 000-000000000-000000000
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>         
+                            Date Issued: MMMM dd, YYYY
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>         
+                            Final PTU#: FPMMYYYY-000-0000000-00000
+                        </td>
+                    </tr>
+                </thead>
+            </table>
+          </div>
+     
+      <div>
+        <div class="sales-invoice-title">
+            <span>SALES INVOICE</span>
+        </div>
+
+        <table class="receipt-data">
+            <tr>
+                <td>MIN No</td>
+                <td>:</td>
+                <td>00000000000000000</td>
+            </tr>
+            <tr>
+                <td>Terminal</td>
+                <td>:</td>
+                <td>SBSI POS1</td>
+            </tr>
+            <tr>
+                <td>POS Serial No</td>
+                <td>:</td>
+                <td>00000000000000000</td>
+            </tr>
+            <tr>
+                <td>Location</td>
+                <td>:</td>
+                <td>Makati City</td>
+            </tr>
+            <tr>
+                <td>Date/Time</td>
+                <td>:</td>
+                <td><span id="receipt-date"></span></td>
+            </tr>
+            <tr>
+                <td>Cashier</td>
+                <td>:</td>
+                <td><span id="cashier-name"></td>
+            </tr>
+            <tr>
+                <td>Transaction No</td>
+                <td>:</td>
+                <td><span id="receipt-transaction"></span></td>
+            </tr>
+            <tr>
+                <td>Invoice No</td>
+                <td>:</td>
+                <td><span id="receipt-invoice"></span></td>
+            </tr>
+
+            <tr>
+                <td style="height: 10px"></td>
+              </tr>
+
+        </table>
+      </div>
+
+      <div class="receipt-items" id="receipt-items">
+        <table class="receipt-item">
+          <thead>
+            <tr>
+              <td><strong>Item</strong></td>
+              <td><strong>Qty</strong></td>
+              <td><strong>Price</strong></td>
+              <td><strong>Amount</strong></td>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- GENERATE RECEIPT DATA HERE -->
+             
+          </tbody>
+          <tfoot>
+            <tr>
+              <td style="height: 10px"></td>
+            </tr>
+
+            <tr>
+              <td colspan="3">Sub Total</td>
+              <td><span id="subtotal-total">₱0.00</span></td>
+            </tr>
+
+            <tr>
+              <td style="height: 10px"></td>
+            </tr>
+
+            <tr>
+              <td colspan="3">Total</td>
+              <td><span id="total-total">₱0.00</span></td>
+            </tr>
+            <tr>
+              <td colspan="3">CASH</td>
+              <td><span id="cash-total">₱0.00</span></td>
+            </tr>
+            <tr>
+              <td colspan="3">Change</td>
+              <td><span id="change-total">₱0.00</span></td>
+            </tr>
+
+            <tr>
+              <td style="height: 10px"></td>
+            </tr>
+
+            <tr>
+              <td colspan="3">VATable Sales</td>
+              <td><span id="vatable-total">₱0.00</span></td>
+            </tr>
+            <tr>
+              <td colspan="3">Vat-Exempt Sales</td>
+              <td><span id="vat-exempt-total">₱0.00</span></td>
+            </tr>
+            <tr>
+              <td colspan="3">VAT Zero-Rated Sales</td>
+              <td><span id="vat-zero-rated-total">₱0.00</span></td>
+            </tr>
+            <tr>
+              <td colspan="3">VAT Amount</td>
+              <td><span id="vat-amount-total">₱0.00</span></td>
+            </tr>
+
+            <tr>
+              <td style="height: 10px"></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+      <div class="receipt-footer">
+        <p>{{ item-count }} Items.</p>
+        <p>Thank you for your purchase!</p>
+        <p class="receipt-note">
+          This serve as your Sales Invoice and Proof of Payment
+        </p>
+      </div>
+
+      <div class="cx-data">
+        <table>
+            <tr>
+                <td>Customer Name:</td>
+                <td>{{ cx-Name }}</td>
+            </tr>
+            <tr>
+                <td>Address:</td>
+                <td>{{ cx-Address }}</td>
+            </tr>
+            <tr>
+                <td>TIN:</td>
+                <td>{{ cx-TIN }}</td>
+            </tr>
+            <tr>
+                <td>Business Style:</td>
+                <td>{{ cx-BS }}</td>
+            </tr>
+        </table>
+      </div>
+
+      <div class="pos-details">
+        <table>
+            <thead>
+                <tr style="height: 30px">
+                    <td>         
+                        <strong>POS PROVIDER</strong>
+                    </td>
+                </tr>
+                <tr>
+                    <td>         
+                        SCIENTIFIC BIOTECH SPECIALTIES, INC.
+                    </td>
+                </tr>
+                <tr>
+                    <td>         
+                        <address>6023 Sacred Heart, Cor Kamagong</address>
+                    </td>
+                </tr>
+                <tr>
+                    <td>         
+                        <address>Makati, 1203 Metro Manila</address>
+                    </td>
+                </tr>
+                <tr>
+                    <td>         
+                        TIN: 201-841-917-0000
+                    </td>
+                </tr>
+                <tr>
+                    <td>         
+                        Accreditation#: 000-000000000-000000000
+                    </td>
+                </tr>
+                <tr>
+                    <td>         
+                        Date Issued: MMMM dd, YYYY
+                    </td>
+                </tr>
+                <tr>
+                    <td>         
+                        Final PTU#: FPMMYYYY-000-0000000-00000
+                    </td>
+                </tr>
+            </thead>
+        </table>
+      </div>
+    </div>
+
+    <script>
+      orderItems = [
+        { name: "Aspirin", QTY: 150, price: 10 },
+        { name: "Cough Syrup", QTY: 500, price: 5 },
+        { name: "Bandages", QTY: 350, price: 2 },
+      ];
+
+      let totalAmount = 0;
+      const itemsContainer = document
+        .getElementById("receipt-items")
+        .querySelector("tbody");
+
+      orderItems.forEach((item) => {
+        const rowName = document.createElement("tr");
+        const rowData = document.createElement("tr");
+
+        // Add up the total price
+        totalAmount += item.QTY * item.price;
+        amount = item.QTY * item.price;
+        formattedAmount = Number(amount).toLocaleString(undefined, {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        });
+
+        // Generate the row with item details
+        rowName.innerHTML = `
+            <td colspan=4>${item.name}</td>
+            <td></td>
+            <td></td>
+            <td></td>
+          `;
+
+        rowData.innerHTML = `
+            <td></td>
+            <td>${item.QTY}</td>
+            <td>${item.price}</td>
+            <td>${formattedAmount}</td>
+          `;
+        itemsContainer.appendChild(rowName);
+        itemsContainer.appendChild(rowData);
+      });
+
+      // Update totals on the receipt
+      document.getElementById("subtotal-total").textContent =
+        "₱" +
+        Number(totalAmount).toLocaleString(undefined, {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        });
+      document.getElementById("total-total").textContent =
+        "₱" +
+        Number(totalAmount).toLocaleString(undefined, {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        });
+      document.getElementById("cash-total").textContent =
+        "₱" +
+        Number(totalAmount).toLocaleString(undefined, {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        });
+      document.getElementById("change-total").textContent = "₱0.00"; // Assuming no change for now
+
+      // Display the current date and invoice number
+      document.getElementById("receipt-date").textContent =
+        new Date().toLocaleString();
+      document.getElementById("receipt-invoice").textContent =
+        "SI" + Math.floor(Math.random() * 1000000);
+
+      document.getElementById("cashier-name").textContent = "ADMIN ADMIN ADMIN";
+
+    </script>
+  </body>
+</html>

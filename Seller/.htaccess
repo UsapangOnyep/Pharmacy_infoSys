@@ -1,0 +1,9 @@
+RewriteEngine On
+RewriteBase /pharmacy_infosys/seller/
+
+# Avoid rewriting actual directories (e.g., /orders, /inventory)
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+
+# Redirect requests to 'index.php' with 'page' parameter
+RewriteRule ^([a-zA-Z0-9_-]+)$ index.php?page=$1 [L]

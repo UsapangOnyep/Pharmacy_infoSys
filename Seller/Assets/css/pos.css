@@ -1,0 +1,248 @@
+.POS-container {
+    display: relative;
+    height: 100vh;
+    padding: 10px;
+    box-sizing: border-box;
+  }
+
+  .List-of-orders {
+    position: absolute;
+    top: calc(7vh + 20px);
+    left: 10px;
+    width: 75vw;
+    height: calc(80vh - 30px);
+    background-color: #fff;
+    padding: 10px;
+    border-radius: 10px;
+    overflow-y: auto;
+  }
+
+  .POS-Add-Order {
+    position: absolute;
+    top: calc(7vh + 20px);
+    right: 10px;
+    width: calc(20vw);
+    height: calc(35vh);
+    background-color: #fff;
+    padding: 10px;
+    border-radius: 10px;
+  }
+
+  .POS-button-container {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    width: 75vw;
+    height: calc(10vh - 20px);
+    background-color: #fff;
+    padding: 10px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .POS-order-info {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    width: calc(20vw );
+    height: calc(50vh - 15px);
+    background-color: #fff;
+    padding: 10px;
+    border-radius: 10px;
+  }
+
+  .POS-form input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0 15px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: x-large;
+  }
+
+  .POS-form label{
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0 15px 0;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: x-large;
+  }
+
+  .POS-form-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .POS-form-row div {
+    flex: 1;
+  }
+
+  .POS-form button {
+    background-color: var(--primary-color);
+    border: none;
+    color: var(--header-font-color);
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+
+  .POS-form button:hover {
+    background-color: var(--secondary-color);
+  }
+
+  .POS-button-container button {
+    background-color: var(--primary-color);
+    border: none;
+    color: var(--header-font-color);
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 20px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+    min-width: 125px;
+    max-width: 250px;
+    height: 75px;
+    border-radius: 10px;
+  }
+
+  .List-of-orders th:nth-child(5), 
+  .List-of-orders th:nth-child(6), 
+  .List-of-orders th:nth-child(8) { 
+    width: 80px; 
+  }
+
+  .List-of-orders th:nth-child(5), 
+  .List-of-orders th:nth-child(6), 
+  .List-of-orders th:nth-child(8) {
+    width: 80px;
+    text-align: center; 
+  }
+
+  .List-of-orders th:nth-child(4), 
+  .List-of-orders th:nth-child(7) { 
+    width: 100px; 
+    text-align: right; 
+  }
+
+  .List-of-orders th:nth-child(4), 
+  .List-of-orders th:nth-child(7) {
+    width: 100px;
+    text-align: center; 
+  }
+
+  .List-of-orders td input {
+    width: 60px;
+  }
+
+  #suggestion-box {
+    position: absolute;
+    max-height: 150px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    background-color: white;
+    width: calc(100% - 20px);
+    z-index: 10;
+    display: none; /* Hidden by default */
+  }
+  .suggestion-item {
+    padding: 8px;
+    cursor: pointer;
+  }
+  .suggestion-item:hover {
+    background-color: #f0f0f0;
+  }
+
+
+
+
+
+
+
+
+  /* POS MODAL */ 
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1001;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 5% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 70%;
+  max-width: 500px;
+  border-radius: 8px;
+  position: relative;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+}
+
+.modal input[type="number"]{
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0 15px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.form-row div {
+  flex: 1;
+}
+
+.modal button {
+  background-color: var(--primary-color);
+  border: none;
+  color: var(--header-font-color);
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.modal button:hover {
+  background-color: var(--secondary-color);
+}

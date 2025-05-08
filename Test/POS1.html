@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Item Selector</title>
+</head>
+<body>
+
+  <label for="ItemName">Item Name:</label>
+  <input type="text" id="ItemName" name="ItemName" required oninput="setSelectedItemInfo()" />
+
+  <label for="ItemDescription">Item Description:</label>
+  <input type="text" id="ItemDescription" name="ItemDescription" readonly />
+
+  <label for="ItemPrice">Item Price:</label>
+  <input type="text" id="ItemPrice" name="ItemPrice" readonly />
+
+  <script>
+    const items = [
+      { id: 1, name: 'Aspirin', description: 'Pain reliever', price: 10 },
+      { id: 2, name: 'Cough Syrup', description: 'Cough medicine', price: 5 },
+      { id: 3, name: 'Bandages', description: 'For wounds', price: 2 },
+    ];
+
+    function setSelectedItemInfo() {
+      const itemName = document.getElementById('ItemName').value.trim().toLowerCase(); // Get the input value
+      console.log("Item Name Input: ", itemName); // Log input
+
+      const item = items.find((item) => item.name.toLowerCase() === itemName); // Find item by name
+
+      if (item) {
+        // If a match is found, update the description and price
+        document.getElementById('ItemDescription').value = item.description;
+        document.getElementById('ItemPrice').value = item.price;
+        console.log("Found Item: ", item); // Log found item info
+      } else {
+        // Clear the fields if no item matches
+        document.getElementById('ItemDescription').value = '';
+        document.getElementById('ItemPrice').value = '';
+        console.log("No matching item found for: ", itemName);
+      }
+    }
+  </script>
+
+</body>
+</html>

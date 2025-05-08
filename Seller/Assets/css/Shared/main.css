@@ -1,0 +1,183 @@
+:root {
+    --primary-color:  rgba(89, 115, 153); 
+    --secondary-color: rgba(166, 140, 102);
+    --background-color: rgba(223, 232, 248);
+    --header-bg-color: rgba(74, 100, 138);
+    --header-font-color: rgba(255, 255, 255);
+
+    --btn-ok: rgba(33, 150, 243, 1);
+    --btn-ok-hover: rgba(24, 123, 199, 1);
+    
+    --btn-error: rgba(244, 67, 54, 1);
+    --btn-error-hover: rgba(200, 55, 44, 1); 
+    
+    --btn-success: rgba(76, 175, 80, 1);
+    --btn-success-hover: rgba(60, 140, 64, 1);
+    
+    --btn-edit: rgba(255, 152, 0, 1); 
+    --btn-edit-hover: rgba(204, 122, 0, 1);
+    
+    --btn-warning: rgba(255, 193, 7, 1); 
+    --btn-warning-hover: rgba(204, 154, 6, 1);
+
+    --table-bg-color: rgba(240, 245, 255, 1); 
+    --table-header-bg-color: rgba(74, 100, 138, 1); 
+    --table-header-font-color: rgba(255, 255, 255, 1);
+    --table-border-color: rgba(200, 200, 200, 1); 
+    --table-row-even-bg-color: rgba(235, 243, 255, 1); 
+    --table-row-odd-bg-color: rgba(255, 255, 255, 1); 
+}
+
+body {
+    background-color: var(--background-color);
+    color: var(--general-text-color);
+    font-family: Arial, sans-serif;
+    margin: 0;
+}
+
+footer {
+    background-color: var(--header-bg-color);
+    color: var(--header-font-color);
+    text-align: left;
+    position: fixed;
+    padding: 0 10px;
+    width: 100%;
+    bottom: 0;
+}
+
+
+/* Buttons */
+.btn-default {
+    background-color: var(--primary-color); 
+    border: none;
+    color: var(--header-font-color); 
+    padding: 8px 12px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin: 2px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-default:hover {
+    background-color: var(--secondary-color); 
+}
+
+.button-container {
+    display: flex;
+    gap: 10px; 
+}
+
+.btn-form-edit {
+    background-color: var(--btn-edit); 
+    border: none;
+    color: var(--header-font-color); 
+    padding: 4px 6px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin: 2px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-form-edit:hover {
+    background-color: var(--btn-edit-hover); 
+}
+
+.btn-form-delete {
+    background-color: var(--btn-error);  
+    border: none;
+    color: var(--header-font-color); 
+    padding: 4px 6px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin: 2px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-form-delete:hover {
+    background-color: var(--btn-error-hover);  
+}
+
+
+.btn-form-restore {
+    background-color: var(--btn-ok);  
+    border: none;
+    color: var(--header-font-color); 
+    padding: 4px 6px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin: 2px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-form-restore:hover {
+    background-color: var(--btn-ok-hover);  
+}
+
+
+/* ================ */
+/* LOG OUT  LOG OUT */
+/* ================ */
+
+#logout-animation {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    text-align: center;
+    background-color: rgba(89, 115, 153); 
+    padding: 20px 20px 10px 20px;
+    border-radius: 10px;
+}
+
+#logout-animation.show {
+    display: block;
+}
+
+.spinner {
+    border: 4px solid transparent;
+    border-top: 4px solid #3498db;
+    border-radius: 50%;
+    width: 40px;
+    margin: auto;
+    height: 40px;
+    animation: spin 1s linear infinite;
+}
+
+#logout-message {
+    margin-top: 10px;
+    font-size: 18px;
+    color: #fff;
+    font-weight: bold;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* ================ */
+/* READ ONLY FIELDS */
+/* ================ */
+
+.readonly-field {
+    background-color: #f0f0f0;
+    cursor: not-allowed;
+}

@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pharmacy InfoSys - POS</title>
+
+    <link rel="stylesheet" href="../Seller/Assets/css/shared/main.css" />
+    <link rel="stylesheet" href="../Seller/Assets/css/shared/tables.css" />
+    <link rel="stylesheet" href="../Seller/Assets/css/shared/modals.css" />
+
+    <style>
+        .POS-container {
+          display: relative;
+          height: 100vh;
+          padding: 10px;
+          box-sizing: border-box;
+        }
+      
+        .List-of-orders {
+          position: absolute;
+          top: calc(7vh + 20px);
+          left: 10px;
+          width: 75vw;
+          height: calc(80vh - 30px);
+          background-color: #fff;
+          padding: 10px;
+          border-radius: 10px;
+          overflow-y: auto;
+        }
+      
+        .POS-Add-Order {
+          position: absolute;
+          top: calc(7vh + 20px);
+          right: 10px;
+          width: calc(20vw + 20px);
+          height: calc(55vh - 40px);
+          background-color: #fff;
+          padding: 10px;
+          border-radius: 10px;
+        }
+      
+        .POS-button-container {
+          position: absolute;
+          bottom: 10px;
+          left: 10px;
+          width: 75vw;
+          height: calc(10vh - 20px);
+          background-color: #fff;
+          padding: 10px;
+          border-radius: 10px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 10px;
+        }
+      
+        .POS-order-info {
+          position: absolute;
+          bottom: 10px;
+          right: 10px;
+          width: calc(20vw + 20px);
+          height: calc(35vh - 15px);
+          background-color: #fff;
+          padding: 10px;
+          border-radius: 10px;
+        }
+      
+        .POS-form input[type="text"],
+        .POS-form input[type="number"],
+        .POS-form input[type="email"],
+        .POS-form input[type="password"],
+        .POS-form input[type="date"],
+        .POS-form input[type="checkbox"],
+        .POS-form select,
+        .POS-form textarea {
+          width: 100%;
+          padding: 10px;
+          margin: 5px 0 15px 0;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          box-sizing: border-box;
+        }
+      
+        .POS-form-row {
+          display: flex;
+          justify-content: space-between;
+          gap: 10px;
+        }
+      
+        .POS-form-row div {
+          flex: 1;
+        }
+      
+        .POS-form button {
+          background-color: var(--primary-color);
+          border: none;
+          color: var(--header-font-color);
+          padding: 10px 20px;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 16px;
+          margin: 4px 2px;
+          cursor: pointer;
+          border-radius: 4px;
+        }
+      
+        .POS-form button:hover {
+          background-color: var(--secondary-color);
+        }
+      
+        .POS-button-container button {
+          background-color: var(--primary-color);
+          border: none;
+          color: var(--header-font-color);
+          padding: 10px 20px;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 20px;
+          margin: 4px 2px;
+          cursor: pointer;
+          border-radius: 4px;
+          min-width: 150px;
+          max-width: 250px;
+          height: 75px;
+          border-radius: 10px;
+        }
+      
+        .List-of-orders th:nth-child(5), 
+        .List-of-orders th:nth-child(6), 
+        .List-of-orders th:nth-child(8) { 
+          width: 80px; 
+        }
+      
+        .List-of-orders th:nth-child(5), 
+        .List-of-orders th:nth-child(6), 
+        .List-of-orders th:nth-child(8) {
+          width: 80px;
+          text-align: center; 
+        }
+
+        .List-of-orders th:nth-child(4), 
+        .List-of-orders th:nth-child(7) { 
+          width: 100px; 
+          text-align: right; 
+        }
+      
+        .List-of-orders th:nth-child(4), 
+        .List-of-orders th:nth-child(7) {
+          width: 100px;
+          text-align: center; 
+        }
+      
+        .List-of-orders td input {
+          width: 60px;
+        }
+      </style>
+      
+  </head>
+
+  <body>
+    <div class="POS-container">
+      <div class="POS-header">
+        <h2>Point of Sales</h2>
+        <hr />
+      </div>
+
+      <section class="List-of-orders">
+        <table class="table-default">
+          <thead>
+            <tr>
+              <th hidden>Stock ID</th>
+              <th>Item Name</th>
+              <th>Item Description</th>
+              <th>Price</th>
+              <th>QTY</th>
+              <th>Discount</th>
+              <th>Total Price</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Dynamic List of Orders here -->
+          </tbody>
+        </table>
+      </section>
+
+      <section class="POS-Add-Order">
+        <h3>Order Form</h3>
+        <hr />
+        <div class="POS-form">
+          <form id="addSupplierForm" enctype="multipart/form-data">
+            <label for="ItemName">Item Name:</label>
+            <select
+              id="ItemName"
+              name="ItemName"
+              required
+              onchange="setSelectedItemInfo()"
+            >
+              <option value="">Select an Item</option>
+              <!-- Item options here -->
+            </select>
+
+            <label for="ItemDescription">Item Description:</label>
+            <input
+              type="text"
+              id="ItemDescription"
+              name="ItemDescription"
+              readonly
+            />
+
+            <div class="POS-form-row">
+              <div>
+                <label for="ItemPrice">Price:</label>
+                <input type="text" id="ItemPrice" name="ItemPrice" readonly />
+              </div>
+              <div>
+                <label for="ItemQty">Quantity:</label>
+                <input type="number" id="ItemQty" name="ItemQty" required min="1" />
+              </div>
+            </div>
+
+            <label for="ItemDiscount">Discount:</label>
+            <input type="number" id="ItemDiscount" name="ItemDiscount" min="0" />
+
+            <label for="ItemTotalPrice">Total Price:</label>
+            <input
+              type="text"
+              id="ItemTotalPrice"
+              name="ItemTotalPrice"
+              readonly
+            />
+
+            <!-- Submit Button -->
+            <button type="submit">Add</button>
+          </form>
+        </div>
+      </section>
+
+      <section class="POS-order-info">
+        <div class="POS-form">
+          <form id="addSupplierForm" enctype="multipart/form-data">
+            <label for="orderTotal">Total:</label>
+            <input type="text" id="orderTotal" name="orderTotal" readonly />
+
+            <label for="orderDiscount">Discount:</label>
+            <input type="text" id="orderDiscount" name="orderDiscount" />
+
+            <label for="orderGrandTotal">Grand Total:</label>
+            <input
+              type="text"
+              id="orderGrandTotal"
+              name="orderGrandTotal"
+              readonly
+            />
+
+            <label for="orderPayment">Payment:</label>
+            <input type="text" id="orderPayment" name="orderPayment" />
+
+            <label for="orderChange">Change:</label>
+            <input type="text" id="orderChange" name="orderChange" readonly />
+          </form>
+        </div>
+      </section>
+
+      <section class="POS-button-container">
+        <button id="btnVoid">Void</button>
+        <button id="btnVoid">Void History</button>
+        <button id="btnRePrint">Re-Print</button>
+        <button id="btnTransactionHistory">Transaction History</button>
+        <button id="btnCheckout">Checkout</button>
+        <button id="btnCheckout">X Report</button>
+        <button id="btnCheckout">Z Report</button>
+      </section>
+    </div>
+
+    <script src="../Seller/Assets/js/SweetAlert/sweetalert2.js"></script>
+
+    <script>
+      // Dummy data for items to simulate real data from a server or database.
+      const items = [
+        { id: 1, name: 'Aspirin', description: 'Pain reliever', price: 10 },
+        { id: 2, name: 'Cough Syrup', description: 'Cough medicine', price: 5 },
+        { id: 3, name: 'Bandages', description: 'For wounds', price: 2 },
+      ];
+
+      // Function to populate item options in the dropdown
+      function populateItemOptions() {
+        const itemSelect = document.getElementById('ItemName');
+        items.forEach((item) => {
+          const option = document.createElement('option');
+          option.value = item.id;
+          option.textContent = item.name;
+          itemSelect.appendChild(option);
+        });
+      }
+
+      // Function to set the selected item details in the form and auto add it to the table
+      function setSelectedItemInfo() {
+        const selectedItemId = document.getElementById('ItemName').value;
+        const item = items.find((item) => item.id == selectedItemId);
+
+        if (item) {
+          // Set default values for discount (0) and qty (1)
+          document.getElementById('ItemDescription').value = item.description;
+          document.getElementById('ItemPrice').value = item.price;
+          document.getElementById('ItemQty').value = 1; // Default quantity
+          document.getElementById('ItemDiscount').value = 0; // Default discount
+
+          // Calculate total price for the item
+          calculateTotalPrice();
+
+          // Automatically add the item to the list
+          addOrderToList();
+        }
+      }
+
+      // Function to calculate the total price based on quantity and discount
+      function calculateTotalPrice() {
+        const qty = parseInt(document.getElementById('ItemQty').value) || 1; // Ensure min value is 1
+        const price = parseFloat(document.getElementById('ItemPrice').value) || 0;
+        const discount = parseFloat(document.getElementById('ItemDiscount').value) || 0;
+
+        const totalPrice = (price * qty) * (1 - discount / 100);
+        document.getElementById('ItemTotalPrice').value = totalPrice.toFixed(2);
+      }
+
+      // Function to add an order to the list
+      function addOrderToList() {
+        const itemSelect = document.getElementById('ItemName');
+        const selectedItemId = itemSelect.value;
+        const item = items.find((item) => item.id == selectedItemId);
+
+        if (!item) {
+          alert('Please select an item.');
+          return;
+        }
+
+        const qty = parseInt(document.getElementById('ItemQty').value) || 1; // Ensure min value is 1
+        const discount = parseFloat(document.getElementById('ItemDiscount').value) || 0; // Ensure min value is 0
+        const totalPrice = parseFloat(document.getElementById('ItemTotalPrice').value) || 0;
+
+        if (qty < 1) {
+          alert('Quantity cannot be less than 1.');
+          return;
+        }
+        if (discount < 0) {
+          alert('Discount cannot be less than 0.');
+          return;
+        }
+
+        // Add new order row to the list
+        const tableBody = document.querySelector('.List-of-orders tbody');
+        const row = document.createElement('tr');
+
+        row.innerHTML = `
+          <td hidden>${item.id}</td>
+          <td>${item.name}</td>
+          <td>${item.description}</td>
+          <td>${item.price}</td>
+          <td><input type="number" class="qty" value="${qty}" min="1" onchange="updateRowTotal(this)" /></td>
+          <td><input type="number" class="discount" value="${discount}" min="0" onchange="updateRowTotal(this)" /></td>
+          <td><span class="total-price">${totalPrice.toFixed(2)}</span></td>
+          <td>
+            <button onclick="removeOrder(this)">Remove</button>
+          </td>
+        `;
+
+        tableBody.appendChild(row);
+
+        // Clear form and reset input values for the next selection
+        document.getElementById('addSupplierForm').reset();
+        document.getElementById('ItemDiscount').value = 0; // Reset discount
+        document.getElementById('ItemQty').value = 1; // Reset quantity
+        calculateOrderTotal();
+      }
+
+      // Function to remove an order row from the list
+      function removeOrder(button) {
+        const row = button.closest('tr');
+        row.remove();
+        calculateOrderTotal();
+      }
+
+      // Function to update the total price for a row
+      function updateRowTotal(element) {
+        const row = element.closest('tr');
+        const qty = parseInt(row.querySelector('.qty').value) || 1;  // Ensure min value is 1
+        const discount = parseFloat(row.querySelector('.discount').value) || 0;  // Ensure min value is 0
+        const price = parseFloat(row.cells[3].textContent) || 0;
+
+        if (qty < 1) {
+          row.querySelector('.qty').value = 1;  // Reset to 1 if less than 1
+        }
+
+        if (discount < 0) {
+          row.querySelector('.discount').value = 0;  // Reset to 0 if less than 0
+        }
+
+        const totalPrice = (price * qty) * (1 - discount / 100);
+        row.querySelector('.total-price').textContent = totalPrice.toFixed(2);
+
+        calculateOrderTotal();
+      }
+
+      function calculateOrderTotal() {
+        const rows = document.querySelectorAll('.List-of-orders tbody tr');
+        let orderTotal = 0;
+
+        rows.forEach((row) => {
+          const totalPrice = parseFloat(row.querySelector('.total-price').textContent);
+          orderTotal += totalPrice;
+        });
+
+        document.getElementById('orderTotal').value = orderTotal.toFixed(2);
+        calculateGrandTotal(orderTotal);
+      }
+
+      function calculateGrandTotal(orderTotal) {
+        const orderDiscount = parseFloat(document.getElementById('orderDiscount').value) || 0;
+        const grandTotal = orderTotal * (1 - orderDiscount / 100);
+        document.getElementById('orderGrandTotal').value = grandTotal.toFixed(2);
+      }
+
+      function calculateChange() {
+        const grandTotal = parseFloat(document.getElementById('orderGrandTotal').value) || 0;
+        const payment = parseFloat(document.getElementById('orderPayment').value) || 0;
+        const change = payment - grandTotal;
+
+        if (change < 0) {
+          alert('Payment is less than the grand total.');
+        } else {
+          document.getElementById('orderChange').value = change.toFixed(2);
+        }
+      }
+
+      document.getElementById('orderDiscount').addEventListener('input', function () {
+        const orderTotal = parseFloat(document.getElementById('orderTotal').value) || 0;
+        calculateGrandTotal(orderTotal);
+      });
+
+      document.getElementById('orderPayment').addEventListener('input', function () {
+        calculateChange();
+      });
+
+      document.addEventListener('DOMContentLoaded', function () {
+        populateItemOptions();
+      });
+    </script>
+  </body>
+</html>

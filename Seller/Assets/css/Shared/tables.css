@@ -1,0 +1,120 @@
+/* Container for the table with overflow handling */
+.table-container {
+    width: 100%; 
+    max-width: 100%; 
+    overflow-x: auto; 
+    margin: 0 auto; 
+    box-sizing: border-box;
+    background-color: #fff;
+    padding: 5px;
+}
+
+/* Table styling */
+.table-default {
+    background-color: var(--table-bg-color);
+    padding: 5px;
+    width: 100%;
+    min-width: 800px; /* Ensures table has a minimum width before scrolling occurs */
+    border-collapse: collapse;
+}
+
+/* Table header styling */
+.table-default th {
+    padding: 8px;
+    background-color: var(--table-header-bg-color);
+    color: var(--table-header-font-color);
+    text-align: left;
+    position: sticky;
+    top: 0; 
+    z-index: 1;
+}
+
+/* Adjust last column width */
+.table-default th:last-child {
+    width: 175px;
+}
+
+/* Row styling */
+.table-default tr {
+    border-bottom: 1px solid var(--table-border-color);
+}
+
+/* Even row styling */
+.table-default tr:nth-child(even) {
+    background-color: var(--table-row-even-bg-color);
+}
+
+/* Odd row styling */
+.table-default tr:nth-child(odd) {
+    background-color: var(--table-row-odd-bg-color);
+}
+
+/* Table cell styling */
+.table-default td {
+    padding: 8px;
+    border-bottom: 1px solid var(--table-border-color);
+}
+
+/* Hover effect on table cells */
+.table-default td:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+/* Hover effect on last column cells */
+.table-default tr:nth-child(odd) td:last-child:hover {
+    background-color: var(--table-row-odd-bg-color);
+}
+
+.table-default tr:nth-child(even) td:last-child:hover {
+    background-color: var(--table-row-even-bg-color);
+}
+
+
+.table-default input[type="text"],
+.table-default input[type="number"],
+.table-default input[type="email"],
+.table-default input[type="password"],
+.table-default input[type="date"],
+.table-default input[type="checkbox"],
+.table-default select,
+.table-default textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0 15px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+/* Pagination controls styling */
+#paginationControls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+}
+
+#paginationControls div {
+    font-size: 0.9rem;
+}
+
+#paginationControls button {
+    padding: 0.5rem 1rem;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#paginationControls button:hover {
+    background-color: var(--secondary-color);
+}
+
+#paginationControls button[disabled] {
+    background-color: #ccc;
+    color: #111111;
+    cursor: not-allowed;
+}

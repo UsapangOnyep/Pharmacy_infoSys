@@ -1,0 +1,15 @@
+.account-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.readonly-field {
+    background-color: #f0f0f0;
+    cursor: not-allowed;
+}
+.editable-field {
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+}

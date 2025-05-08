@@ -1,0 +1,30 @@
+.stocks-disposal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.table-container {
+    background-color: #fff;
+    padding: 5px;
+}
+
+#AddRow {
+    margin: 10px 5px 5px 5px;
+    background-color: var(--primary-color);
+    color: var(--header-font-color);
+    padding: 10px 20px;
+    text-align: center;
+}
+
+.form-control {
+    width: 100%;
+    max-width: fit-content;
+    padding: 10px;
+    margin: 5px 0 15px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const addRowButton = document.getElementById('AddRow');
+            const submitButton = document.getElementById('Submit');
+            const tableBody = document.querySelector('table tbody');
+
+            // Add Row functionality
+            addRowButton.addEventListener('click', function(event) {
+                event.preventDefault(); // Prevent form submission
+
+                // Create a new row and its cells
+                const newRow = document.createElement('tr');
+
+                const firstNameCell = document.createElement('td');
+                const lastNameCell = document.createElement('td');
+                const ageCell = document.createElement('td');
+                const removeCell = document.createElement('td');
+
+                // Create input elements for each cell
+                const firstNameInput = document.createElement('input');
+                firstNameInput.type = 'text';
+                firstNameInput.name = 'first_name';
+
+                const lastNameInput = document.createElement('input');
+                lastNameInput.type = 'text';
+                lastNameInput.name = 'last_name';
+
+                const ageInput = document.createElement('input');
+                ageInput.type = 'text';
+                ageInput.name = 'age';
+
+                const removeButton = document.createElement('button');
+                removeButton.textContent = 'Remove';
+                removeButton.addEventListener('click', function(event) {
+                    event.preventDefault(); // Prevent form submission
+                    newRow.remove(); // Remove the row from the table
+                });
+
+                // Append input elements to respective cells
+                firstNameCell.appendChild(firstNameInput);
+                lastNameCell.appendChild(lastNameInput);
+                ageCell.appendChild(ageInput);
+                removeCell.appendChild(removeButton);
+
+                // Append cells to the row
+                newRow.appendChild(firstNameCell);
+                newRow.appendChild(lastNameCell);
+                newRow.appendChild(ageCell);
+                newRow.appendChild(removeCell);
+
+                // Append the row to the table body
+                tableBody.appendChild(newRow);
+            });
+
+            function removeRow(event) {
+                event.preventDefault(); // Prevent form submission
+                this.parentElement.parentElement.remove(); // Remove the row from the table
+            }
+
+            // Collect and log data from each row
+            submitButton.addEventListener('click', function(event) {
+                event.preventDefault(); // Prevent form submission
+
+                const rows = tableBody.querySelectorAll('tr');
+                const rowData = [];
+
+                rows.forEach(function(row) {
+                    const inputs = row.querySelectorAll('input');
+                    const rowValues = {
+                        first_name: inputs[0].value,
+                        last_name: inputs[1].value,
+                        age: inputs[2].value
+                    };
+                    rowData.push(rowValues);
+                });
+
+                console.log(rowData); // Log row data, you can send this to the server or handle it further
+            });
+        });
+    </script>
+</head>
+<body>
+    <form method="post">
+        <div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Age</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><input type="text" name="first_name" id="first_name"></td>
+                        <td><input type="text" name="last_name" id="last_name"></td>
+                        <td><input type="text" name="age" id="age"></td>
+                    </tr>  
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <button id="AddRow">Add Row</button>
+            <button id="Submit">Submit</button>
+        </div>
+    </form>
+</body>
+</html>

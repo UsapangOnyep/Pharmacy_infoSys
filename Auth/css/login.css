@@ -1,0 +1,95 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    background-color: rgba(89, 115, 153);  
+    font-family: 'Helvetica', sans-serif;
+}
+
+.login-container {
+    padding: 20px;
+    border-radius: 8px;
+    width: 325px;
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.9);  /* Lighter background to contrast */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);  /* Added box-shadow for better definition */
+}
+
+.login-container p {
+    color: rgba(0, 0, 0, 0.7);  /* Changed text color for better contrast */
+    margin-bottom: 20px;
+}
+
+.login-container img {
+    max-width: 100px;
+}
+
+.login-container h2 {
+    margin-bottom: 30px;
+    color: rgba(0, 0, 0, 0.9);  /* Changed to black for better readability */
+}
+
+.form-group {
+    margin-bottom: 15px;
+    text-align: left;
+    position: relative;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px 10px 10px 40px; /* Added padding for a better look */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.left {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+
+.right {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    background-color: rgba(223, 232, 248); /* Light background */
+    border: none;
+    color: rgba(74, 100, 138);
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+button:hover {
+    background-color: rgba(150, 160, 180, 1); /* Darker color on hover */
+    color: #000;
+}
+
+input[type="password"],
+input[type="text"] {
+    width: 100%;
+    padding: 10px 10px 10px 40px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.error-message {
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+    display: block;
+}
