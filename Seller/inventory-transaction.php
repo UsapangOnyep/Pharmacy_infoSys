@@ -32,6 +32,7 @@
                         <th>Brand</th>
                         <th>Model</th>
                         <th>Expiry Date</th>
+                        <th>Remarks</th>
                         <td hidden>Action</td>
                     </tr>
                 </thead>

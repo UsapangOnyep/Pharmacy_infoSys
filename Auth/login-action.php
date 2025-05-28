@@ -47,7 +47,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             echo json_encode([
                 'success' => true,
-                'redirectUrl' => $user['usertype'] === 'admin' ? '../Seller/' : '../Seller/pos.php',
+                // 'redirectUrl' => $user['usertype'] === 'admin' ? '../Seller/' : '../Seller/pos.php',
+                'redirectUrl' => $user['usertype'] === 'admin' ? '../Seller/' : 'StartShift.php',
                 'user' => $user,
                 'employee' => $employee,
                 'usertype' => $user['usertype']

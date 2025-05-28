@@ -66,6 +66,7 @@ function updateTable(transactions) {
                   <td>${transaction.Brand}</td>
                   <td>${transaction.Model}</td>
                   <td>${transaction.ExpiryDate}</td>
+                  <td>${transaction.Remarks}</td>
                   <td hidden></td>
               `;
       tableBody.appendChild(row);

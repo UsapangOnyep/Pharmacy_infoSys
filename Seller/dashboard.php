@@ -1,3 +1,6 @@
+<!-- Example HTML fragment -->
 <div class="employee-container">
-<h1> THIS IS DASHBOARD</h1>
+
+    <h1>THIS IS DASHBOARD</h1>
+
 </div>

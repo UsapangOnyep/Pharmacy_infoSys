@@ -10,18 +10,20 @@ $offset = ($page - 1) * $limit;
 $sql = "SELECT 
             t1.ID,
             t1.DateTimeCreated AS TransactionDate,
-            t1.ActionTaken,
-            t1.QTY,
-            t3.ItemName,
-            t3.ItemDesc,
-            t3.Category,
-            t3.Brand,
-            t3.Model,
-            t2.ExpiryDate
+            IFNULL(t1.ActionTaken, '') AS ActionTaken,
+            IFNULL(t1.QTY, '') AS QTY,
+            IFNULL(t3.ItemName, '') AS ItemName,
+            IFNULL(t3.ItemDesc, '') AS ItemDesc,
+            IFNULL(t3.Category, '') AS Category,
+            IFNULL(t3.Brand, '') AS Brand,
+            IFNULL(t3.Model, '') AS Model,
+            IFNULL(t2.ExpiryDate, '') AS ExpiryDate,
+            IFNULL(t4.Reason, '') AS Remarks
         FROM
             invtransaction t1
             INNER JOIN stocks t2 ON t1.StockID = t2.ID
             INNER JOIN items t3 ON t2.ItemID = t3.ID
+            LEFT JOIN tbl_disposed t4 ON t1.ReferenceCode = t4.ID AND t1.ActionTaken = 'Dispose'
         WHERE t3.Category LIKE ? OR t3.Brand LIKE ? OR t3.Model LIKE ? OR t3.ItemDesc LIKE ? OR t3.ItemName LIKE ? OR t1.ActionTaken LIKE ?          
         ORDER BY t1.id DESC
         LIMIT ? OFFSET ?";
