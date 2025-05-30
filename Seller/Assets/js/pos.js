@@ -171,8 +171,33 @@ document.addEventListener("DOMContentLoaded", function () {
   //  START OF AUTH
   //=====================
   const usertype = localStorage.getItem("usertype");
+  const shiftData = localStorage.getItem("shiftData");
 
-  if (usertype !== "admin" && usertype !== "user") {
+  let validShift = false;
+
+  try {
+    const parsedShift = JSON.parse(shiftData);
+    validShift = parsedShift && parsedShift.shiftNumber; // Make sure shift has ID or some known key
+  } catch (e) {
+    validShift = false;
+  }
+
+  // if (usertype !== "admin" && usertype !== "user") {
+  //   if (validShift === null || validShift === false) {
+  //     window.location.href = "../Auth/startshift.php";
+  //     return;
+  //   } else {
+  //     window.location.href = "../Auth/";
+  //     return;
+  //   }
+  // }
+
+  if (usertype === "admin" || usertype === "user") {
+    if (!validShift) {
+      window.location.href = "../Auth/startshift.php";
+      return;
+    }
+  } else {
     window.location.href = "../Auth/";
   }
 
@@ -514,9 +539,21 @@ document.getElementById("Submit_ChangeofShip").addEventListener("click", functio
 
   const user = JSON.parse(localStorage.getItem("user"));
   const CreatedBy = user ? user.ID : "";
+  const shiftData = JSON.parse(localStorage.getItem("shiftData"));
+  const shiftNumber = shiftData ? shiftData.shiftNumber : null;
+  
+  if (!CreatedBy || !shiftNumber) {
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: "You must be logged in and have a valid shift to end."
+    });
+    return;
+  }
 
   const data = {
     CreatedBy,
+    shiftNumber,
     txt1k: parseInt(document.getElementById("txt1k").value) || 0,
     txt5H: parseInt(document.getElementById("txt5H").value) || 0,
     txt2H: parseInt(document.getElementById("txt2H").value) || 0,

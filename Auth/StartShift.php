@@ -26,5 +26,6 @@
     </button>
 </body>
 <script src="js/startshift.js"></script>
+<script src="../Seller/Assets/js/SweetAlert/sweetalert2.js"></script>
 
 </html>

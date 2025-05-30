@@ -26,7 +26,7 @@ $twentyFiveCents = isset($data['txt25c']) ? (int) $data['txt25c'] : 0;
 
 $CreatedBy = isset($data['CreatedBy']) ? trim($data['CreatedBy']) : '';
 
-$ShiftNumber = 1; 
+$ShiftNumber = isset($data['ShiftNumber']) ? (int) $data['ShiftNumber'] : 0; 
 // $ShiftDate = date("Y-m-d"); 
 
 $conn->begin_transaction();

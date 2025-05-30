@@ -7,7 +7,12 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log("User data:", user); // Debugging line to check user data
 
         if (!user || !user.ID) {
-            alert("User not logged in.");
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'You must be logged in to start a shift.',
+                confirmButtonText: 'OK'
+            });
             return;
         }
 
@@ -25,21 +30,36 @@ document.addEventListener("DOMContentLoaded", function () {
                     //sweet alert or similar notification can be used here
                     localStorage.setItem("shiftData", JSON.stringify(data.shiftData));
 
-                    alert("Shift started successfully!");
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Shift Started',
+                        text: 'Your shift has been started successfully.',
+                        confirmButtonText: 'OK'
+                    });
+
                     if (data.redirectUrl) {
                         window.location.href = data.redirectUrl;
                     }
                 } else {
-                    alert(data.message || "Failed to start shift.");
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: data.message || 'Failed to start shift.',
+                        confirmButtonText: 'OK'
+                    });
                 }
             })
             .catch((error) => {
                 console.error("Error:", error);
-                alert("There was an error starting the shift. Please try again.");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: "There was an error starting the shift. Please try again.",
+                    confirmButtonText: 'OK'
+                });
             });
     });
 });
-
 
 document.addEventListener("contextmenu", function(e) {
     e.preventDefault(); // Prevent right-click context menu
@@ -60,28 +80,67 @@ document.addEventListener("keydown", function(e) {
 });
 
 // check if the user is logged in and if the shift is already started
-document.addEventListener("DOMContentLoaded", function() {
-    const user = localStorage.getItem("user");
+document.addEventListener("DOMContentLoaded", function () {
+    const user = JSON.parse(localStorage.getItem("user"));
+
     if (!user) {
         window.location.href = "login.php"; // Redirect to login if not logged in
-    } else {
-        // Check if shift is already started
-        fetch("check-shift-status.php", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ user_id: JSON.parse(user).ID })
-        })
-        .then((response) => response.json())
-        .then((data) => {
-            if (data.success && data.shiftStatus === "started") {
-                alert("Shift is already started.");
-                window.location.href = "dashboard.php"; // Redirect to dashboard if shift is already started
-            }
-        })
-        .catch((error) => {
-            console.error("Error:", error);
-        });
+        return;
     }
+
+    // Check if shift is already started
+    const formData = new FormData();
+    formData.append("user_id", user.ID);
+    formData.append("action", "checkShiftStatus");
+
+    console.log("Checking shift status for user ID:", user.ID);
+
+    fetch("check-shift-status.php", {
+        method: "POST",
+        body: formData
+    })
+    .then((response) => response.json())
+    .then((data) => {
+        console.log("Shift status response:", data);
+
+        if (data.success === false && data.shiftData) {
+            // User already has an active shift
+            localStorage.setItem("shiftData", JSON.stringify(data.shiftData));
+
+            Swal.fire({
+                icon: 'info',
+                title: 'Shift Active',
+                text: 'You already have an active shift.',
+                confirmButtonText: 'OK'
+            });
+
+            if (data.redirectUrl) {
+                window.location.href = data.redirectUrl;
+            }
+        } else if (data.success === true) {
+            // No shift found (may proceed to create one)
+            Swal.fire({
+                icon: 'info',
+                title: 'No Active Shift',
+                text: 'You can start a new shift.',
+                confirmButtonText: 'OK'
+            });
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: "Unexpected response. Please try again.",
+                confirmButtonText: 'OK'
+            });
+        }
+    })
+    .catch((error) => {
+        console.error("Error:", error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: "An error occurred while checking shift status.",
+            confirmButtonText: 'OK'
+        });
+    });
 });
