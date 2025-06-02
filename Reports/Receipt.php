@@ -7,7 +7,7 @@ $TransactionNo = isset($_GET['TransactionNo']) ? trim($_GET['TransactionNo']) : 
 
 // First query to fetch sales invoice details
 $sql = "
-SELECT st.SINo, st.Amount, st.Discount, st.DateTimeCreated, emp.Fname, st.CashTendered, st.CashChange 
+SELECT st.SINo, st.Amount,  ROUND((st.Amount * (st.Discount / 100)),2) AS Discount, st.DateTimeCreated, emp.Fname, st.CashTendered, st.CashChange 
 FROM salestransaction st
 INNER JOIN user_account acc ON acc.ID = st.CreatedBy
 INNER JOIN lEmployee emp ON acc.EmployeeID = emp.ID
@@ -24,7 +24,7 @@ if ($result->num_rows > 0) {
 
 // Second query to fetch invoice items
 $sql = "
-SELECT i.ItemName, sii.Qty, sii.Price 
+SELECT i.ItemName, sii.Qty, sii.Price, ROUND(((sii.Qty * sii.Price) * (sii.Discount / 100)),2) as Discount
 FROM salestransactionitems sii 
 INNER JOIN stocks s ON s.ID = sii.StockID 
 INNER JOIN items i ON i.id = s.ItemID
@@ -154,6 +154,12 @@ $totalAmount = 0;
                         $amount = $item['Qty'] * $item['Price'];
                         $formattedAmount = number_format($amount, 2);
                         $formattedPrice = number_format($item['Price'], 2);
+                        $discount = 0.00;
+                        if ($item['Discount'] > 0) {
+                            $discount = number_format($item['Discount'], 2);
+                        } else {
+                            $discount = "0.00";
+                        }
                         ?>
                         <tr>
                             <td colspan="3"> <?php echo $item['ItemName']; ?></td>
@@ -167,7 +173,21 @@ $totalAmount = 0;
                             <td style="text-align: right;"><?php echo $formattedPrice; ?></td>
                             <td><?php echo $formattedAmount; ?></td>
                         </tr>
-                        <?php $totalAmount += $amount;
+                        
+                        <?php if ($discount > 0) { ?>
+                            <tr>
+                                <td colspan="3" style="text-align: center; font-size: 7pt;"><i>*** less <?php echo $discount; ?> ***</i></td>
+                                <td><?php echo number_format($formattedAmount - $discount, 2); ?></td>
+                            </tr>
+                        <?php } ?>
+
+                        <?php 
+                        if ($item['Discount'] > 0) {
+                            $amount -= $item['Discount'];
+                        }
+
+                        $totalAmount += $amount;
+                        
                     }
                     ?>
 
@@ -178,22 +198,26 @@ $totalAmount = 0;
                         <td colspan="3">Sub Total</td>
                         <td><?php echo number_format($totalAmount, 2); ?></td>
                     </tr>
-                    <tr>
-                        <td colspan="3">Total</td>
+
+
+                    <tr style="font-weight: bold; font-size: 10pt;">
+                        <td colspan="3">TOTAL DUE</td>
                         <td><?php echo number_format($totalAmount, 2); ?></td>
-                    </tr>
-                    <tr>
-                        <td colspan="3">CASH</td>
-                        <td><?php echo number_format($orderDetails["CashTendered"], 2); ?></td>
-                    </tr>
-                    <tr>
-                        <td colspan="3">Change</td>
-                        <td><?php echo number_format($orderDetails["CashChange"], 2); ?></td>
                     </tr>
                     <tr>
                         <td colspan="3">Discount</td>
                         <td><?php echo number_format($orderDetails["Discount"], 2); ?></td>
                     </tr>
+                    <tr>
+                        <td colspan="3">CASH</td>
+                        <td><?php echo number_format($orderDetails["CashTendered"], 2); ?></td>
+                    </tr>
+                    <tr style="font-weight: bold; font-size: 10pt;">
+                        <td colspan="3"><strong>CHANGE</strong></td>
+                        <td>
+                            <?php echo number_format($orderDetails["CashChange"], 2); ?></td>
+                    </tr>
+
                     <tr>
                         <td colspan="3">VATable Sales</td>
                         <td>0.00</td>
@@ -208,7 +232,7 @@ $totalAmount = 0;
                     </tr>
                     <tr>
                         <td colspan="3">VAT Amount</td>
-                        <td><?php echo number_format($orderDetails["Amount"], 2); ?></td>
+                        <td>0.00</td>
                     </tr>
                 </tfoot>
             </table>

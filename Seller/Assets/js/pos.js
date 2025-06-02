@@ -418,11 +418,13 @@ function Checkout(isVoid) {
     const itemId = row.querySelector("td").textContent.trim();
     const qty = parseInt(row.querySelector(".qty").value, 10) || 0;
     const priceElement = row.querySelector(".item-price");
+    const discountElement = row.querySelector(".discount");
+    const discount = parseFloat(discountElement.value) || 0;
 
     if (priceElement) {
       const price = parseFloat(priceElement.textContent.replace(/[^\d.-]/g, ""));
       if (!isNaN(price) && qty > 0) {
-        orderItems.push({ StockID: itemId, Qty: qty, Price: price });
+        orderItems.push({ StockID: itemId, Qty: qty, Price: price, Discount: discount });
       }
     }
   });
@@ -430,6 +432,7 @@ function Checkout(isVoid) {
   const payment = parseFloat(document.getElementById("orderPayment").value) || 0;
   let discount = parseFloat(document.getElementById("orderDiscount").value) || 0;
   let orderTotal = parseFloat(document.getElementById("orderTotal").value.replace(/[^\d.-]/g, "")) || 0;
+  let grandTotal = parseFloat(document.getElementById("orderGrandTotal").value.replace(/[^\d.-]/g, "")) || 0;
   let Change = parseFloat(document.getElementById("orderChange").value.replace(/[^\d.-]/g, "")) || 0;
 
   const user = JSON.parse(localStorage.getItem("user"));
@@ -455,7 +458,7 @@ function Checkout(isVoid) {
       Swal.fire({ icon: "error", title: "Error", text: "Payment must be greater than 0!" });
       return;
     }
-    if (payment < orderTotal) {
+    if (payment < grandTotal) {
       Swal.fire({ icon: "error", title: "Error", text: "Payment is less than the total amount!" });
       return;
     }

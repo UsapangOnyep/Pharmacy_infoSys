@@ -12,18 +12,26 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["action"]) && $_POST["
         }
 
         // Check if the user already has an active shift
-        $checkQuery = "
-            SELECT * FROM shifts
-            WHERE accountid = ? 
-                AND `status` = 'active'
-                AND ShiftNumber = (
-                    SELECT ShiftNumber 
-                    FROM lShift 
-                    WHERE CURTIME() BETWEEN ShiftTimeIn AND ShiftTimeOut
-                    LIMIT 1
-                )
-            ORDER BY ID DESC
-            LIMIT 1";
+        $checkQuery = " SELECT * 
+                        FROM shifts
+                        WHERE accountid = ?
+                        AND `EndTime` IS NULL
+                        AND `StartTime` IS NOT NULL
+                        AND `StartTime` <= NOW()
+                        AND `status` = 'active'
+                        AND ShiftNumber = (
+                            SELECT ShiftNumber 
+                            FROM lShift 
+                            WHERE (
+                            (ShiftTimeIn < ShiftTimeOut AND CURTIME() BETWEEN ShiftTimeIn AND ShiftTimeOut)
+                            OR
+                            (ShiftTimeIn > ShiftTimeOut AND (CURTIME() >= ShiftTimeIn OR CURTIME() <= ShiftTimeOut))
+                            )
+                            LIMIT 1
+                        )
+                        AND DATEDIFF(CURDATE(), DATE(StartTime)) = 0 
+                        ORDER BY ID DESC
+                        LIMIT 1;";
         
         $checkStmt = $conn->prepare($checkQuery);
         if (!$checkStmt) {

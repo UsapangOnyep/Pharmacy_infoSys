@@ -1,5 +1,5 @@
 <header class="page-header">
-    <p>Pharmacy Information System v1.0.1.1</p>
+    <p>Pharmacy Information System v1.1.0.0</p>
     <p>Hello, <span id="employee-name"></span>!</p>
 </header>
 

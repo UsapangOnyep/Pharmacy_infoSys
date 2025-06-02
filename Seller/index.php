@@ -39,6 +39,7 @@ if (!in_array($page, $allowedPages)) {
     <link rel="stylesheet" href="Assets/css/shared/index.css">
     <link rel="stylesheet" href="Assets/css/shared/tables.css">
     <link rel="stylesheet" href="Assets/css/shared/modals.css">
+    <link rel="stylesheet" href="Assets/css/shared/card.css">
     <link rel="stylesheet" href="Assets/css/<?= $page ?>.css">
 </head>
 
@@ -63,7 +64,7 @@ if (!in_array($page, $allowedPages)) {
     <script src="Assets/js/main.js"></script>
     <script src="Assets/js/logout.js"></script>
     <script src="Assets/js/<?= $page ?>.js"></script>
-    <!-- <script src="Assets/js/disabler-dev-tool.js"></script> -->
+    <script src="Assets/js/disabler-dev-tool.js"></script>
 
 </body>
 

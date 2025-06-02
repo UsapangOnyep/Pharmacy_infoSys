@@ -53,12 +53,12 @@
                 Accounts
             </a>
         </li>
-        <li>
+        <!-- <li>
             <a href="?page=account">
                 <img src="Assets/img/icons/reset-password.png" alt="">
                 Reset Password
             </a>
-        </li>
+        </li> -->
         <li>
             <a href="#" id="logout-link">
                 <img src="Assets/img/icons/switch.png" alt="">

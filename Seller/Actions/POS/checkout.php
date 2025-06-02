@@ -14,10 +14,10 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 $data = json_decode(file_get_contents("php://input"), true);
 
 $orderItems = isset($data['orderItems']) ? $data['orderItems'] : [];
-$discount = isset($data['discount']) ? (float) $data['discount'] : 0;
-$CashTendered = isset($data['payment']) ? (float) $data['payment'] : 0;
-$Change = isset($data['Change']) ? (float) $data['Change'] : 0;
-$orderTotal = isset($data['orderTotal']) ? (float) $data['orderTotal'] : 0;
+$discount = isset($data['discount']) ? (float) $data['discount'] : 0.00;
+$CashTendered = isset($data['payment']) ? (float) $data['payment'] : 0.00;
+$Change = isset($data['Change']) ? (float) $data['Change'] : 0.00;   
+$orderTotal = isset($data['orderTotal']) ? (float) $data['orderTotal'] : 0.00;
 $CreatedBy = isset($data['CreatedBy']) ? trim($data['CreatedBy']) : '';
 $Status = isset($data['orderStatus']) ? $data['orderStatus'] : '1';
 
@@ -40,8 +40,8 @@ try {
     $stmt->execute();
 
     foreach ($orderItems as $item) {
-        $stmt = $conn->prepare("INSERT INTO SalesTransactionItems (TransactionNo, StockID, Qty, Price) VALUES (?, ?, ?, ?)");
-        $stmt->bind_param("siid", $TransactionNo, $item['StockID'], $item['Qty'], $item['Price']);
+        $stmt = $conn->prepare("INSERT INTO SalesTransactionItems (TransactionNo, StockID, Qty, Price, Discount) VALUES (?, ?, ?, ?, ?)");
+        $stmt->bind_param("siidd", $TransactionNo, $item['StockID'], $item['Qty'], $item['Price'], $item['Discount']);
         $stmt->execute();
 
         if ($Status == "1") {

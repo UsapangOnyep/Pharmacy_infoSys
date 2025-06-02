@@ -6,11 +6,14 @@ function showModal() {
   document.getElementById("addModal").style.display = "block";
   
   // Delete the existing rows in the table body
-  const tableBody = document.getElementById("stocksTable");
-  while (tableBody.rows.length > 0) {
-    tableBody.deleteRow(0);
-  }
+  // const tableBody = document.getElementById("stocksTable");
+  // while (tableBody.rows.length > 0) {
+  //   tableBody.deleteRow(0);
+  // }
   
+  const tableBody = document.querySelector("#stocksTable tbody");
+  tableBody.innerHTML = "";
+
   addRow(); 
 }
 

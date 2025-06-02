@@ -145,6 +145,51 @@ function Removeaccount(ID) {
   });
 }
 
+// Function to Reset Password
+function Resetaccount(ID) {
+  Swal.fire({
+    title: "Are you sure?",
+    text: "This will reset the account password.",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Yes, reset it!",
+    cancelButtonText: "Cancel",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      fetch("Actions/account/reset-password.php", {
+        method: "POST",
+        body: new URLSearchParams({ ID: ID }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.status === "success") {
+            Swal.fire({
+              icon: "success",
+              title: data.message,
+              showConfirmButton: false,
+              timer: 1000,
+            }).then(() => {
+              fetchaccountData(); // Reload account data
+            });
+          } else {
+            Swal.fire({
+              icon: "error",
+              title: "Error",
+              text: data.message || "Failed to restore account.",
+            });
+          }
+        })
+        .catch((error) => {
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: error.message || "Something went wrong!",
+          });
+        });
+    }
+  });
+}
+
 function editaccount(accountID) {
   document.getElementById("editModal").style.display = "block";
 
@@ -310,7 +355,8 @@ function updateTable(accounts) {
                 account.Status === "Inactive"
                   ? `<button class="btn-form-restore" onclick="Restoreaccount(${account.ID})">Restore</button>`
                   : `<button class="btn-form-edit" onclick="editaccount(${account.ID})">Edit</button>
-                   <button class="btn-form-delete" onclick="Removeaccount(${account.ID})">Remove</button>`
+                  <button class="btn-form-delete" onclick="Removeaccount(${account.ID})">Remove</button>
+                  <button class="btn-form-restore" onclick="Resetaccount(${account.ID})">Reset Password</button>`
               }
           </td>
       `;

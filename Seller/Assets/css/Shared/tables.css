@@ -14,7 +14,7 @@
     background-color: var(--table-bg-color);
     padding: 5px;
     width: 100%;
-    min-width: 800px; /* Ensures table has a minimum width before scrolling occurs */
+    min-width: 600px; /* Ensures table has a minimum width before scrolling occurs */
     border-collapse: collapse;
 }
 

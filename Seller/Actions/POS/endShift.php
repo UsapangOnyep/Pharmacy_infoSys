@@ -17,7 +17,7 @@ $oneThousand = isset($data['txt1k']) ? (int) $data['txt1k'] : 0;
 $fiveHundred = isset($data['txt5H']) ? (int) $data['txt5H'] : 0;
 $twoHundred = isset($data['txt2H']) ? (int) $data['txt2H'] : 0;
 $oneHundred = isset($data['txt1H']) ? (int) $data['txt1H'] : 0;
-$fifty = isset($data['txt50']) ? (int) $data['txt50'] : 0;
+$fifty = isset($data['txt50']) ? (int) $data['txt50'] : 0;  
 $twenty = isset($data['txt20']) ? (int) $data['txt20'] : 0;
 $ten = isset($data['txt10']) ? (int) $data['txt10'] : 0;
 $five = isset($data['txt5']) ? (int) $data['txt5'] : 0;
@@ -42,6 +42,19 @@ try {
     );
 
     $stmt->execute();
+
+    // update the shifts table to set the end time and status
+    $updateStmt = $conn->prepare("
+        UPDATE shifts 
+        SET EndTime = NOW(), Status = 'completed' 
+        WHERE AccountID = ? AND ShiftNumber = ? AND EndTime IS NULL");
+    $updateStmt->bind_param("ii", $CreatedBy, $ShiftNumber);
+    $updateStmt->execute();
+    if ($updateStmt->affected_rows === 0) {
+        throw new Exception("No active shift found for the given account and shift number.");
+    }
+    $updateStmt->close();
+    $stmt->close();
 
     $conn->commit();
     echo json_encode(['status' => 'success', 'message' => 'End of shift report saved successfully.']);
