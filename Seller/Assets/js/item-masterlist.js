@@ -70,8 +70,12 @@ function updateTable(items) {
       row.innerHTML = `
                 <td hidden>${item.id}</td>
                  <td>
-                    <img src="${item.ItemPath}" style="max-width: 100px; height: auto; cursor: pointer;" 
-                         onclick="openFullScreen('${item.ItemPath}', '${item.ItemName}')">
+                    <img src="${
+                      item.ItemPath
+                    }" style="max-width: 100px; height: auto; cursor: pointer;" 
+                         onclick="openFullScreen('${item.ItemPath}', '${
+        item.ItemName
+      }')">
                 </td>
                 <td>${item.Category}</td>
                 <td>${item.Brand}</td>
@@ -165,6 +169,10 @@ function AddItem(event) {
   // Check if required fields are filled
   if (!itemName || !itemDesc || !itemReorderLevel) {
     Swal.fire({
+      position: "top",
+      toast: true,
+      showConfirmButton: false,
+      timer: 1500,
       icon: "error",
       title: "Error",
       text: "All required fields must be filled!",
@@ -172,20 +180,28 @@ function AddItem(event) {
     return;
   }
 
- // Convert itemReorderLevel to a number
- itemReorderLevel = Number(itemReorderLevel);
+  // Convert itemReorderLevel to a number
+  itemReorderLevel = Number(itemReorderLevel);
 
- // Check if reorder level is a valid positive whole number
- if (isNaN(itemReorderLevel) || !Number.isInteger(itemReorderLevel) || itemReorderLevel <= 0) {
-   Swal.fire({
-     icon: "error",
-     title: "Error",
-     text: "Reorder level must be a positive whole number!",
-   });
-   return;
- }
+  // Check if reorder level is a valid positive whole number
+  if (
+    isNaN(itemReorderLevel) ||
+    !Number.isInteger(itemReorderLevel) ||
+    itemReorderLevel <= 0
+  ) {
+    Swal.fire({
+      position: "top",
+      toast: true,
+      showConfirmButton: false,
+      timer: 1500,
+      icon: "error",
+      title: "Error",
+      text: "Reorder level must be a positive whole number!",
+    });
+    return;
+  }
   const formData = new FormData(form);
- 
+
   const user = JSON.parse(localStorage.getItem("user"));
   const CreatedBy = user ? user.ID : "";
   formData.append("CreatedBy", CreatedBy);
@@ -213,10 +229,12 @@ function AddItem(event) {
       console.log("Server response:", data);
       if (data.status === "success") {
         Swal.fire({
+          position: "top",
+          toast: true,
+          showConfirmButton: false,
+          timer: 1500,
           icon: "success",
           title: data.message,
-          showConfirmButton: false,
-          timer: 1000,
         }).then(() => {
           window.location.reload();
         });
@@ -227,6 +245,10 @@ function AddItem(event) {
     .catch((error) => {
       console.error("Error:", error);
       Swal.fire({
+        position: "top",
+        toast: true,
+        showConfirmButton: false,
+        timer: 1500,
         icon: "error",
         title: "Error",
         text: error.message || "Something went wrong!",
@@ -236,6 +258,7 @@ function AddItem(event) {
 // Function to Remove Employee
 function RestoreItem(ID) {
   Swal.fire({
+    position: "top",
     title: "Are you sure?",
     text: "This will restore the item.",
     icon: "warning",
@@ -252,6 +275,8 @@ function RestoreItem(ID) {
         .then((data) => {
           if (data.status === "success") {
             Swal.fire({
+              position: "top",
+              toast: true,
               icon: "success",
               title: data.message,
               showConfirmButton: false,
@@ -261,6 +286,10 @@ function RestoreItem(ID) {
             });
           } else {
             Swal.fire({
+              position: "top",
+              toast: true,
+              showConfirmButton: false,
+              timer: 1500,
               icon: "error",
               title: "Error",
               text: data.message || "Failed to restore item.",
@@ -269,6 +298,10 @@ function RestoreItem(ID) {
         })
         .catch((error) => {
           Swal.fire({
+            position: "top",
+            toast: true,
+            showConfirmButton: false,
+            timer: 1500,
             icon: "error",
             title: "Error",
             text: error.message || "Something went wrong!",
@@ -298,6 +331,8 @@ function RemoveItem(ID) {
           console.log("Server response:", data);
           if (data.status === "success") {
             Swal.fire({
+              position: "top",
+              toast: true,
               icon: "success",
               title: data.message,
               showConfirmButton: false,
@@ -308,6 +343,10 @@ function RemoveItem(ID) {
             });
           } else {
             Swal.fire({
+              position: "top",
+              toast: true,
+              showConfirmButton: false,
+              timer: 1500,
               icon: "error",
               title: "Error",
               text: data.message || "Failed to remove item.",
@@ -317,6 +356,10 @@ function RemoveItem(ID) {
         .catch((error) => {
           console.error("Error:", error);
           Swal.fire({
+            position: "top",
+            toast: true,
+            showConfirmButton: false,
+            timer: 1500,
             icon: "error",
             title: "Error",
             text: error.message || "Something went wrong!",
@@ -333,6 +376,10 @@ document
 
     if (!hasChanges()) {
       Swal.fire({
+        position: "top",
+        toast: true,
+        showConfirmButton: false,
+        timer: 1500,
         icon: "info",
         title: "No Changes Detected",
         text: "You have not made any changes.",
@@ -340,10 +387,20 @@ document
       return;
     }
 
-    let reorderLevel = Number(document.getElementById("editReorderLevel").value.trim());
+    let reorderLevel = Number(
+      document.getElementById("editReorderLevel").value.trim()
+    );
 
-    if (isNaN(reorderLevel) || !Number.isInteger(reorderLevel) || reorderLevel <= 0) {
+    if (
+      isNaN(reorderLevel) ||
+      !Number.isInteger(reorderLevel) ||
+      reorderLevel <= 0
+    ) {
       Swal.fire({
+        position: "top",
+        toast: true,
+        showConfirmButton: false,
+        timer: 1500,
         icon: "error",
         title: "Error",
         text: "Reorder level must be a positive whole number!",
@@ -353,12 +410,12 @@ document
 
     const form = document.querySelector("#editProductForm");
     const formData = new FormData(form);
-    
+
     const user = JSON.parse(localStorage.getItem("user"));
     const CreatedBy = user ? user.ID : "";
     formData.append("CreatedBy", CreatedBy);
-  
-    const url = "Actions/Items/edit.php"; 
+
+    const url = "Actions/Items/edit.php";
 
     fetch(url, {
       method: "POST", // Ensure the method is POST
@@ -368,6 +425,10 @@ document
       .then((data) => {
         if (data.status === "success") {
           Swal.fire({
+            position: "top",
+            toast: true,
+            showConfirmButton: false,
+            timer: 1500,
             icon: "success",
             title: data.message,
             showConfirmButton: false,
@@ -377,6 +438,10 @@ document
           });
         } else {
           Swal.fire({
+            position: "top",
+            toast: true,
+            showConfirmButton: false,
+            timer: 1500,
             icon: "error",
             title: "Error",
             text: data.message, // Show error message from the response
@@ -386,6 +451,10 @@ document
       .catch((error) => {
         console.error("Error:", error);
         Swal.fire({
+          position: "top",
+          toast: true,
+          showConfirmButton: false,
+          timer: 1500,
           icon: "error",
           title: "Error",
           text: "Something went wrong!", // Handle any other errors
@@ -393,45 +462,40 @@ document
       });
   });
 
+const form = document.querySelector("#editProductForm");
+let originalData = {};
+let originalImagePath = "";
 
-  const form = document.querySelector("#editProductForm");
-  let originalData = {}; 
-  let originalImagePath = "";
-
-  function storeOriginalData() {
-    originalData = {}; 
-    form.querySelectorAll("input, textarea").forEach((input) => {
-      if (input.type !== "file") {
-        originalData[input.name] = input.value.trim();
-      }
-    });
-
-    const imgPreview = document.getElementById("editImagePreview");
-    originalImagePath = imgPreview.src || ""; 
-
-  }
-
-  // ✅ Function to Check if Form Data Has Changed
-  function hasChanges() {
-    let isChanged = false;
-    form.querySelectorAll("input, textarea").forEach((input) => {
-      if (input.type !== "file") {
-        if (input.value.trim() !== (originalData[input.name] || "")) {
-          isChanged = true;
-        }
-      }
-    });
-
-    const fileInput = document.getElementById("editProductImageUpload");
-    if (fileInput.files.length > 0) {
-      isChanged = true;
+function storeOriginalData() {
+  originalData = {};
+  form.querySelectorAll("input, textarea").forEach((input) => {
+    if (input.type !== "file") {
+      originalData[input.name] = input.value.trim();
     }
+  });
 
-    return isChanged;
+  const imgPreview = document.getElementById("editImagePreview");
+  originalImagePath = imgPreview.src || "";
+}
+
+// ✅ Function to Check if Form Data Has Changed
+function hasChanges() {
+  let isChanged = false;
+  form.querySelectorAll("input, textarea").forEach((input) => {
+    if (input.type !== "file") {
+      if (input.value.trim() !== (originalData[input.name] || "")) {
+        isChanged = true;
+      }
+    }
+  });
+
+  const fileInput = document.getElementById("editProductImageUpload");
+  if (fileInput.files.length > 0) {
+    isChanged = true;
   }
 
-
-
+  return isChanged;
+}
 
 // Show edit modal and populate fields
 function editItem(ItemId) {
@@ -469,6 +533,10 @@ function editItem(ItemId) {
       } else {
         console.log(data);
         Swal.fire({
+          position: "top",
+          toast: true,
+          showConfirmButton: false,
+          timer: 1500,
           icon: "error",
           title: "Error",
           text: data.message,
@@ -478,6 +546,10 @@ function editItem(ItemId) {
     .catch((error) => {
       console.log(error);
       Swal.fire({
+        position: "top",
+        toast: true,
+        showConfirmButton: false,
+        timer: 1500,
         icon: "error",
         title: "Error",
         text: error.message,
@@ -545,18 +617,20 @@ function clearEditImage() {
   document.getElementById("editClearImage").style.display = "none";
 }
 
-document.getElementById("editProductImageUpload").addEventListener("change", function (event) {
-  const file = event.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = function (e) {
-      document.getElementById("editImagePreview").src = e.target.result;
-      document.getElementById("editImagePreview").style.display = "block";
-      document.getElementById("editClearImage").style.display = "block";
-    };
-    reader.readAsDataURL(file);
-  } else {
-    document.getElementById("editImagePreview").style.display = "none";
-    document.getElementById("editClearImage").style.display = "none";
-  }
-});
+document
+  .getElementById("editProductImageUpload")
+  .addEventListener("change", function (event) {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        document.getElementById("editImagePreview").src = e.target.result;
+        document.getElementById("editImagePreview").style.display = "block";
+        document.getElementById("editClearImage").style.display = "block";
+      };
+      reader.readAsDataURL(file);
+    } else {
+      document.getElementById("editImagePreview").style.display = "none";
+      document.getElementById("editClearImage").style.display = "none";
+    }
+  });

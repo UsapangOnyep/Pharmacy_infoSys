@@ -1,0 +1,35 @@
+=======================
+ HOW TO SET-UP PRINTER
+=======================
+
+1. Download Driver
+    - https://www.xprintertech.com/drivers-2
+2. Install Driver
+3. Select
+    - Select XP-80C
+    - OS Version
+    - Printer Interface (USB or Other)
+    - Set Defaulth Printer
+    - Install Now
+4. Go to Printer and Scanner
+5. Select Printer 
+6. Click Printing Preference
+7. Click Advanced...
+8. Change Paper Size to 57 x 90 mm
+9. Click Okay
+10. Test Print out using the system
+
+(optionals) -> Web Printing
+1. Set Margin to none
+2. Set Scale to Custom -> 90
+
+===========================
+ HOW TO SET-UP CASH DRAWER
+===========================
+
+1. Go to Printer and Scanner
+2. Select Printer
+3. Click Printer Properties
+4. Go to Device Settings Tab
+5. Change the Cashbox Action
+6. Click Okay

@@ -13,12 +13,12 @@ function fetchItemData() {
 
 // Load item options dynamically in the select element of each row
 function loadItemOptions(row) {
+  let DisposalType = document.getElementById("disposalReason").value;
+  let DataPath =
+    DisposalType === "Expired"
+      ? "Actions/Stocks/forDisposals.php"
+      : "Actions/Stocks/forDisposals-All.php";
 
-  let DisposalType = document.getElementById('disposalReason').value;
-  let DataPath = (DisposalType === "Expired") 
-    ? "Actions/Stocks/forDisposals.php" 
-    : "Actions/Stocks/forDisposals-All.php";
-  
   fetch(DataPath)
     .then((response) => response.json())
     .then((data) => {
@@ -39,18 +39,17 @@ function loadItemOptions(row) {
 
 // Refresh each row's dropdown based on the new disposalReason
 function onDisposalReasonChange() {
-  const tableBody = document.getElementById('tableBody');
-  const rows = tableBody.querySelectorAll('tr');
-  rows.forEach(row => {
-    loadItemOptions(row); 
+  const tableBody = document.getElementById("tableBody");
+  const rows = tableBody.querySelectorAll("tr");
+  rows.forEach((row) => {
+    loadItemOptions(row);
   });
 }
-
 
 // Update item details when an item is selected from the dropdown
 function setSelectedItemInfo(selectElement) {
   const selectedItemID = selectElement.value;
-  const row = selectElement.closest('tr');
+  const row = selectElement.closest("tr");
 
   if (!selectedItemID) {
     row.querySelector("#ItemDesc").value = "";
@@ -76,11 +75,11 @@ function setSelectedItemInfo(selectElement) {
 }
 
 // Add Row functionality
-document.getElementById('AddRow').addEventListener('click', function(event) {
+document.getElementById("AddRow").addEventListener("click", function (event) {
   event.preventDefault();
 
-  const tableBody = document.getElementById('tableBody');
-  const newRow = document.createElement('tr');
+  const tableBody = document.getElementById("tableBody");
+  const newRow = document.createElement("tr");
 
   // Create the table cells for the new row
   newRow.innerHTML = `
@@ -109,41 +108,41 @@ document.getElementById('AddRow').addEventListener('click', function(event) {
 // Remove Row functionality
 function removeRow(event) {
   event.preventDefault();
-  const row = event.target.closest('tr');
+  const row = event.target.closest("tr");
   row.remove();
 }
 
 // Submit form data (optional example)
-document.getElementById('Submit').addEventListener('click', function(event) {
+document.getElementById("Submit").addEventListener("click", function (event) {
   event.preventDefault();
 
-  const tableBody = document.getElementById('tableBody');
-  const rows = tableBody.querySelectorAll('tr');
+  const tableBody = document.getElementById("tableBody");
+  const rows = tableBody.querySelectorAll("tr");
   const formData = new FormData();
-    
+
   const user = JSON.parse(localStorage.getItem("user"));
   const CreatedBy = user ? user.ID : "";
   formData.append("CreatedBy", CreatedBy);
-  formData.append("Reason", document.getElementById('disposalReason').value);
+  formData.append("Reason", document.getElementById("disposalReason").value);
 
   rows.forEach((row, index) => {
-    const inputs = row.querySelectorAll('input');
-    const select = row.querySelector('select');
+    const inputs = row.querySelectorAll("input");
+    const select = row.querySelector("select");
 
-    const itemId = select.value;  
-    const qtyToDispose = inputs[5].value; 
+    const itemId = select.value;
+    const qtyToDispose = inputs[5].value;
 
-    if (qtyToDispose > 0) {  
+    if (qtyToDispose > 0) {
       formData.append(`itemID[${index}]`, itemId);
       formData.append(`qtyToDispose[${index}]`, qtyToDispose);
     }
   });
 
-  const url = "Actions/Stocks/dispose.php";  // Updated URL for disposal action
+  const url = "Actions/Stocks/dispose.php"; // Updated URL for disposal action
 
   fetch(url, {
     method: "POST",
-    body: formData,  // Send the FormData with itemID and qtyToDispose
+    body: formData, // Send the FormData with itemID and qtyToDispose
   })
     .then((response) => {
       if (!response.ok) {
@@ -162,6 +161,8 @@ document.getElementById('Submit').addEventListener('click', function(event) {
       console.log("Server response:", data);
       if (data.status === "success") {
         Swal.fire({
+          position: "top",
+          toast: true,
           icon: "success",
           title: data.message,
           showConfirmButton: false,
@@ -176,6 +177,10 @@ document.getElementById('Submit').addEventListener('click', function(event) {
     .catch((error) => {
       console.error("Error:", error);
       Swal.fire({
+        position: "top",
+        toast: true,
+        showConfirmButton: false,
+        timer: 1500,
         icon: "error",
         title: "Error",
         text: error.message || "Something went wrong!",

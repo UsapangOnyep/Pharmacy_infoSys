@@ -2,7 +2,7 @@
         MODAL MODAL MODAL MODAL MODAL MODAL MODAL
    ###################################################*/
 
-   function closeEditModal() {
+function closeEditModal() {
   document.getElementById("editModal").style.display = "none";
 }
 
@@ -126,7 +126,6 @@ function updatePagination() {
   }
 }
 
-
 fetchcategoriesData();
 
 function searchcategory() {
@@ -147,7 +146,7 @@ function AddCategory(event) {
 
   const form = document.querySelector("#addCategoryForm");
   const formData = new FormData(form);
-  
+
   const user = JSON.parse(localStorage.getItem("user"));
   const CreatedBy = user ? user.ID : "";
   formData.append("CreatedBy", CreatedBy);
@@ -175,6 +174,8 @@ function AddCategory(event) {
       console.log("Server response:", data);
       if (data.status === "success") {
         Swal.fire({
+          position: "top",
+          toast: true,
           icon: "success",
           title: data.message,
           showConfirmButton: false,
@@ -189,6 +190,10 @@ function AddCategory(event) {
     .catch((error) => {
       console.error("Error:", error);
       Swal.fire({
+        position: "top",
+        toast: true,
+        showConfirmButton: false,
+        timer: 1500,
         icon: "error",
         title: "Error",
         text: error.message || "Something went wrong!",
@@ -208,7 +213,8 @@ function editCategory(CategoryID) {
     .then((data) => {
       if (data.status === "success") {
         document.getElementById("editID").value = data.category.ID;
-        document.getElementById("editCategoryName").value = data.category.Description; // Corrected here
+        document.getElementById("editCategoryName").value =
+          data.category.Description; // Corrected here
       } else {
         alert("Error loading category data.");
       }
@@ -227,7 +233,7 @@ document
     const user = JSON.parse(localStorage.getItem("user"));
     const CreatedBy = user ? user.ID : "";
     formData.append("CreatedBy", CreatedBy);
-  
+
     const url = "Actions/Category/edit.php";
 
     fetch(url, {
@@ -238,15 +244,21 @@ document
       .then((data) => {
         if (data.status === "success") {
           Swal.fire({
-            icon: "success",
-            title: data.message,
+            position: "top",
+            toast: true,
             showConfirmButton: false,
             timer: 1500,
+            icon: "success",
+            title: data.message,
           }).then(() => {
             window.location.reload();
           });
         } else {
           Swal.fire({
+            position: "top",
+            toast: true,
+            showConfirmButton: false,
+            timer: 1500,
             icon: "error",
             title: "Error",
             text: data.message,
@@ -256,6 +268,10 @@ document
       .catch((error) => {
         console.error("Error:", error);
         Swal.fire({
+          position: "top",
+          toast: true,
+          showConfirmButton: false,
+          timer: 1500,
           icon: "error",
           title: "Error",
           text: "Something went wrong!",
@@ -263,7 +279,6 @@ document
       });
   });
 
-  
 // Function to Remove Employee
 function RestoreCategory(ID) {
   Swal.fire({
@@ -283,15 +298,21 @@ function RestoreCategory(ID) {
         .then((data) => {
           if (data.status === "success") {
             Swal.fire({
+              position: "top",
+              toast: true,
               icon: "success",
               title: data.message,
               showConfirmButton: false,
               timer: 1000,
             }).then(() => {
-              fetchcategoriesData(); 
+              fetchcategoriesData();
             });
           } else {
             Swal.fire({
+              position: "top",
+              toast: true,
+              showConfirmButton: false,
+              timer: 1500,
               icon: "error",
               title: "Error",
               text: data.message || "Failed to restore employee.",
@@ -300,6 +321,10 @@ function RestoreCategory(ID) {
         })
         .catch((error) => {
           Swal.fire({
+            position: "top",
+            toast: true,
+            showConfirmButton: false,
+            timer: 1500,
             icon: "error",
             title: "Error",
             text: error.message || "Something went wrong!",
@@ -329,6 +354,8 @@ function RemoveCategory(ID) {
           console.log("Server response:", data);
           if (data.status === "success") {
             Swal.fire({
+              position: "top",
+              toast: true,
               icon: "success",
               title: data.message,
               showConfirmButton: false,
@@ -339,6 +366,10 @@ function RemoveCategory(ID) {
             });
           } else {
             Swal.fire({
+              position: "top",
+              toast: true,
+              showConfirmButton: false,
+              timer: 1500,
               icon: "error",
               title: "Error",
               text: data.message || "Failed to remove category.",
@@ -348,6 +379,10 @@ function RemoveCategory(ID) {
         .catch((error) => {
           console.error("Error:", error);
           Swal.fire({
+            position: "top",
+            toast: true,
+            showConfirmButton: false,
+            timer: 1500,
             icon: "error",
             title: "Error",
             text: error.message || "Something went wrong!",

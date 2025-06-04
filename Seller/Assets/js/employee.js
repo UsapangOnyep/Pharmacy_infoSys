@@ -3,7 +3,7 @@ function AddEmployee(event) {
 
   const form = document.querySelector("#addEmployeeForm");
   const formData = new FormData(form);
-  
+
   const user = JSON.parse(localStorage.getItem("user"));
   const CreatedBy = user ? user.ID : "";
   formData.append("CreatedBy", CreatedBy);
@@ -31,6 +31,10 @@ function AddEmployee(event) {
       console.log("Server response:", data);
       if (data.status === "success") {
         Swal.fire({
+          position: "top",
+          toast: true,
+          showConfirmButton: false,
+          timer: 1500,
           icon: "success",
           title: data.message,
           showConfirmButton: false,
@@ -45,6 +49,10 @@ function AddEmployee(event) {
     .catch((error) => {
       console.error("Error:", error);
       Swal.fire({
+        position: "top",
+        toast: true,
+        showConfirmButton: false,
+        timer: 1500,
         icon: "error",
         title: "Error",
         text: error.message || "Something went wrong!",
@@ -71,6 +79,10 @@ function RestoreEmployee(ID) {
         .then((data) => {
           if (data.status === "success") {
             Swal.fire({
+              position: "top",
+              toast: true,
+              showConfirmButton: false,
+              timer: 1500,
               icon: "success",
               title: data.message,
               showConfirmButton: false,
@@ -80,6 +92,10 @@ function RestoreEmployee(ID) {
             });
           } else {
             Swal.fire({
+              position: "top",
+              toast: true,
+              showConfirmButton: false,
+              timer: 1500,
               icon: "error",
               title: "Error",
               text: data.message || "Failed to restore employee.",
@@ -88,6 +104,10 @@ function RestoreEmployee(ID) {
         })
         .catch((error) => {
           Swal.fire({
+            position: "top",
+            toast: true,
+            showConfirmButton: false,
+            timer: 1500,
             icon: "error",
             title: "Error",
             text: error.message || "Something went wrong!",
@@ -117,6 +137,10 @@ function RemoveEmployee(ID) {
           console.log("Server response:", data);
           if (data.status === "success") {
             Swal.fire({
+              position: "top",
+              toast: true,
+              showConfirmButton: false,
+              timer: 1500,
               icon: "success",
               title: data.message,
               showConfirmButton: false,
@@ -127,6 +151,10 @@ function RemoveEmployee(ID) {
             });
           } else {
             Swal.fire({
+              position: "top",
+              toast: true,
+              showConfirmButton: false,
+              timer: 1500,
               icon: "error",
               title: "Error",
               text: data.message || "Failed to remove employee.",
@@ -136,6 +164,10 @@ function RemoveEmployee(ID) {
         .catch((error) => {
           console.error("Error:", error);
           Swal.fire({
+            position: "top",
+            toast: true,
+            showConfirmButton: false,
+            timer: 1500,
             icon: "error",
             title: "Error",
             text: error.message || "Something went wrong!",
@@ -182,11 +214,11 @@ document
 
     const form = document.querySelector("#editEmployeeForm");
     const formData = new FormData(form);
-    
+
     const user = JSON.parse(localStorage.getItem("user"));
     const CreatedBy = user ? user.ID : "";
     formData.append("CreatedBy", CreatedBy);
-  
+
     const url = "Actions/Employee/edit.php";
 
     fetch(url, {
@@ -197,15 +229,21 @@ document
       .then((data) => {
         if (data.status === "success") {
           Swal.fire({
-            icon: "success",
-            title: data.message,
+            position: "top",
+            toast: true,
             showConfirmButton: false,
             timer: 1500,
+            icon: "success",
+            title: data.message,
           }).then(() => {
             window.location.reload();
           });
         } else {
           Swal.fire({
+            position: "top",
+            toast: true,
+            showConfirmButton: false,
+            timer: 1500,
             icon: "error",
             title: "Error",
             text: data.message,
@@ -215,6 +253,10 @@ document
       .catch((error) => {
         console.error("Error:", error);
         Swal.fire({
+          position: "top",
+          toast: true,
+          showConfirmButton: false,
+          timer: 1500,
           icon: "error",
           title: "Error",
           text: "Something went wrong!",
@@ -254,35 +296,35 @@ function searchEmployee() {
 }
 
 function fetchEmployeeData() {
-    console.log(totalRows);
-  
-    const searchQuery = document.getElementById("searchInput").value;
-    const url = `Actions/Employee/load.php?page=${currentPage}&search=${encodeURIComponent(
-      searchQuery
-    )}`;
-  
-    fetch(url)
-      .then((response) => {
-        console.log("Raw response:", response);
-        return response.text(); 
-      })
-      .then((text) => {
-        try {
-          const data = JSON.parse(text);
-          totalPages = data.totalPages;
-          currentPage = data.currentPage;
-          totalRows = data.totalRows;
-          updateTable(data.employees);
-          updatePagination();
-        } catch (err) {
-          console.error("Error parsing JSON:", err);
-          console.error("Response text:", text);
-        }
-      })
-      .catch((err) => console.error("Error fetching items data:", err));
-  
-    console.log(totalRows);
-  }
+  console.log(totalRows);
+
+  const searchQuery = document.getElementById("searchInput").value;
+  const url = `Actions/Employee/load.php?page=${currentPage}&search=${encodeURIComponent(
+    searchQuery
+  )}`;
+
+  fetch(url)
+    .then((response) => {
+      console.log("Raw response:", response);
+      return response.text();
+    })
+    .then((text) => {
+      try {
+        const data = JSON.parse(text);
+        totalPages = data.totalPages;
+        currentPage = data.currentPage;
+        totalRows = data.totalRows;
+        updateTable(data.employees);
+        updatePagination();
+      } catch (err) {
+        console.error("Error parsing JSON:", err);
+        console.error("Response text:", text);
+      }
+    })
+    .catch((err) => console.error("Error fetching items data:", err));
+
+  console.log(totalRows);
+}
 
 function updateTable(employees) {
   const tableBody = document.getElementById("tableBody");
@@ -318,42 +360,39 @@ function updateTable(employees) {
   }
 }
 
-
 function updatePagination() {
-    const paginationControls = document.getElementById("paginationControls");
-  
-    if (totalRows === 0) {
-      paginationControls.innerHTML = `
+  const paginationControls = document.getElementById("paginationControls");
+
+  if (totalRows === 0) {
+    paginationControls.innerHTML = `
            <div>
              Showing 0 out of 0 | Page 0
            </div>
          `;
-    } else {
-      paginationControls.innerHTML = `
+  } else {
+    paginationControls.innerHTML = `
            <div>
              Showing ${(currentPage - 1) * recordsPerPage + 1} - ${Math.min(
-        currentPage * recordsPerPage,
-        totalRows
-      )} out of ${totalRows} | Page ${currentPage}
+      currentPage * recordsPerPage,
+      totalRows
+    )} out of ${totalRows} | Page ${currentPage}
            </div>
            <div>
              <button onclick="loadPage(1)" ${
                currentPage === 1 ? "disabled" : ""
              }>First</button>
              <button onclick="loadPage(${currentPage - 1})" ${
-        currentPage === 1 ? "disabled" : ""
-      }>Prev</button>
+      currentPage === 1 ? "disabled" : ""
+    }>Prev</button>
              <button onclick="loadPage(${currentPage + 1})" ${
-        currentPage === totalPages ? "disabled" : ""
-      }>Next</button>
+      currentPage === totalPages ? "disabled" : ""
+    }>Next</button>
              <button onclick="loadPage(${totalPages})" ${
-        currentPage === totalPages ? "disabled" : ""
-      }>Last</button>
+      currentPage === totalPages ? "disabled" : ""
+    }>Last</button>
            </div>
          `;
-    }
   }
-  
-  fetchEmployeeData();
-  
-  
+}
+
+fetchEmployeeData();

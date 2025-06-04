@@ -32,8 +32,6 @@ function loadStocks() {
         });
 
         console.log("Items populated:", items);
-
-
       } catch (err) {
         console.error("Error processing stocks data:", err);
       }
@@ -97,10 +95,10 @@ function setSelectedItemInfo() {
             <td hidden>${item.id}</td>
             <td>${item.ItemName}</td>
             <td>${item.ItemDesc}</td>
-            <td><span class="item-price">${item.PriceCurrent}</span></td>
+            <td><span class="item-price">${parseFloat(item.PriceCurrent).toFixed(2)}</span></td>
             <td><input type="number" class="qty" value="1" min="1" onchange="updateRowTotal(this)" /></td>
             <td><input type="number" class="discount" value="0" min="0" max="100" onchange="updateRowTotal(this)" /></td>
-            <td><span class="total-price">${item.PriceCurrent}</span></td>
+            <td><span class="total-price">${parseFloat(item.PriceCurrent).toFixed(2)}</span></td>
             <td>
               <button onclick="removeOrder(this)">Remove</button>
             </td>
@@ -296,20 +294,21 @@ function computeTotal() {
   let totalDiscount = 0;
 
   rows.forEach((row) => {
-    const price = parseFloat(
-      row.querySelector(".total-price").textContent.replace("₱", "").trim()
-    ) || 0;
+    const price =
+      parseFloat(
+        row.querySelector(".total-price").textContent.replace("₱", "").trim()
+      ) || 0;
 
     orderTotal += price;
 
     const qty = parseFloat(row.querySelector(".qty").value) || 0;
-    const pricePerItem = parseFloat(
-      row.querySelector("td:nth-child(4)").textContent
-    ) || 0;
+    const pricePerItem =
+      parseFloat(row.querySelector("td:nth-child(4)").textContent) || 0;
 
     const totalBeforeDiscount = pricePerItem * qty;
 
-    const discountPercent = parseFloat(row.querySelector(".discount").value) || 0;
+    const discountPercent =
+      parseFloat(row.querySelector(".discount").value) || 0;
     const discountAmount = (totalBeforeDiscount * discountPercent) / 100;
 
     totalDiscount += discountAmount;
@@ -329,9 +328,11 @@ function computeTotal() {
   const orderDiscountAmount = (orderTotal * overallDiscountPercent) / 100;
   const grandTotal = orderTotal - orderDiscountAmount;
 
-  document.getElementById("orderGrandTotal").value = formatAsCurrency(grandTotal);
+  document.getElementById("orderGrandTotal").value =
+    formatAsCurrency(grandTotal);
 
-  const payment = parseFloat(document.getElementById("orderPayment").value) || 0;
+  const payment =
+    parseFloat(document.getElementById("orderPayment").value) || 0;
   if (payment >= grandTotal) {
     const change = payment - grandTotal;
     document.getElementById("orderChange").value = formatAsCurrency(change);
@@ -339,7 +340,6 @@ function computeTotal() {
     document.getElementById("orderChange").value = "";
   }
 }
-
 
 document.getElementById("orderPayment").addEventListener("input", function () {
   computeTotal();
@@ -390,15 +390,23 @@ document.addEventListener("DOMContentLoaded", function () {
       <button id="logout-link">Logout</button>`;
   }
 
-  document.getElementById("btnVoid")?.addEventListener("click", () => Checkout(true));
-  document.getElementById("btnCheckout")?.addEventListener("click", () => Checkout(false));
+  document
+    .getElementById("btnVoid")
+    ?.addEventListener("click", () => Checkout(true));
+  document
+    .getElementById("btnCheckout")
+    ?.addEventListener("click", () => Checkout(false));
   // document.getElementById("btnVoidHistory")?.addEventListener("click", showVoidHistory);
   // document.getElementById("btnRePrint")?.addEventListener("click", reprintReceipt);
   // document.getElementById("btnTransactionHistory")?.addEventListener("click", showTransactionHistory);
   // document.getElementById("btnXReport")?.addEventListener("click", generateXReport);
   // document.getElementById("btnZReport")?.addEventListener("click", generateZReport);
-  document.getElementById("btnAdminPanel")?.addEventListener("click", goToAdmin);
-  document.getElementById("btnChangeShift")?.addEventListener("click", showModal);
+  document
+    .getElementById("btnAdminPanel")
+    ?.addEventListener("click", goToAdmin);
+  document
+    .getElementById("btnChangeShift")
+    ?.addEventListener("click", showModal);
   // document.getElementById("btnLogout")?.addEventListener("click", logoutUser);
 });
 
@@ -422,18 +430,36 @@ function Checkout(isVoid) {
     const discount = parseFloat(discountElement.value) || 0;
 
     if (priceElement) {
-      const price = parseFloat(priceElement.textContent.replace(/[^\d.-]/g, ""));
+      const price = parseFloat(
+        priceElement.textContent.replace(/[^\d.-]/g, "")
+      );
       if (!isNaN(price) && qty > 0) {
-        orderItems.push({ StockID: itemId, Qty: qty, Price: price, Discount: discount });
+        orderItems.push({
+          StockID: itemId,
+          Qty: qty,
+          Price: price,
+          Discount: discount,
+        });
       }
     }
   });
 
-  const payment = parseFloat(document.getElementById("orderPayment").value) || 0;
-  let discount = parseFloat(document.getElementById("orderDiscount").value) || 0;
-  let orderTotal = parseFloat(document.getElementById("orderTotal").value.replace(/[^\d.-]/g, "")) || 0;
-  let grandTotal = parseFloat(document.getElementById("orderGrandTotal").value.replace(/[^\d.-]/g, "")) || 0;
-  let Change = parseFloat(document.getElementById("orderChange").value.replace(/[^\d.-]/g, "")) || 0;
+  const payment =
+    parseFloat(document.getElementById("orderPayment").value) || 0;
+  let discount =
+    parseFloat(document.getElementById("orderDiscount").value) || 0;
+  let orderTotal =
+    parseFloat(
+      document.getElementById("orderTotal").value.replace(/[^\d.-]/g, "")
+    ) || 0;
+  let grandTotal =
+    parseFloat(
+      document.getElementById("orderGrandTotal").value.replace(/[^\d.-]/g, "")
+    ) || 0;
+  let Change =
+    parseFloat(
+      document.getElementById("orderChange").value.replace(/[^\d.-]/g, "")
+    ) || 0;
 
   const user = JSON.parse(localStorage.getItem("user"));
   const CreatedBy = user ? user.ID : "";
@@ -446,79 +472,289 @@ function Checkout(isVoid) {
     orderTotal,
     Change,
     orderStatus: isVoid ? "0" : "1",
-    CreatedBy
+    CreatedBy,
   };
 
   if (!isVoid) {
     if (orderItems.length === 0) {
-      Swal.fire({ icon: "error", title: "Error", text: "No items in the order!" });
+      Swal.fire({
+        position: "top",
+        toast: true,
+        showConfirmButton: false,
+        timer: 1500,
+        icon: "error",
+        title: "Error",
+        text: "No items in the order!",
+      });
       return;
     }
     if (payment <= 0) {
-      Swal.fire({ icon: "error", title: "Error", text: "Payment must be greater than 0!" });
+      Swal.fire({
+        position: "top",
+        toast: true,
+        showConfirmButton: false,
+        timer: 1500,
+        icon: "error",
+        title: "Error",
+        text: "Payment must be greater than 0!",
+      });
       return;
     }
     if (payment < grandTotal) {
-      Swal.fire({ icon: "error", title: "Error", text: "Payment is less than the total amount!" });
+      Swal.fire({
+        position: "top",
+        toast: true,
+        showConfirmButton: false,
+        timer: 1500,
+        icon: "error",
+        title: "Error",
+        text: "Payment is less than the total amount!",
+      });
       return;
     }
     if (discount < 0 || discount > 100) {
-      Swal.fire({ icon: "error", title: "Error", text: "Discount must be between 0 and 100!" });
+      Swal.fire({
+        position: "top",
+        toast: true,
+        showConfirmButton: false,
+        timer: 1500,
+        icon: "error",
+        title: "Error",
+        text: "Discount must be between 0 and 100!",
+      });
       return;
     }
     if (Change < 0) {
-      Swal.fire({ icon: "error", title: "Error", text: "Change cannot be negative!" });
+      Swal.fire({
+        position: "top",
+        toast: true,
+        showConfirmButton: false,
+        timer: 1500,
+        icon: "error",
+        title: "Error",
+        text: "Change cannot be negative!",
+      });
       return;
     }
   }
-  
+
   fetch(url, {
     method: "POST",
     body: JSON.stringify(data),
-    headers: { "Content-Type": "application/json" }
+    headers: { "Content-Type": "application/json" },
   })
     .then((response) => response.json())
     .then((data) => {
       if (data.status === "success") {
-        Swal.fire({ icon: "success", title: data.message, timer: 500 }).then(() => {
+        Swal.fire({
+          position: "top",
+          toast: true,
+          showConfirmButton: false,
+          icon: "success",
+          title: data.message,
+          timer: 500,
+        }).then(() => {
           if (!isVoid) {
             printReceipt(data.TransactionNo);
           }
           window.location.reload();
         });
       } else {
-        Swal.fire({ icon: "error", title: "Error", text: data.message });
+        Swal.fire({
+          position: "top",
+          toast: true,
+          showConfirmButton: false,
+          timer: 1500,
+          icon: "error",
+          title: "Error",
+          text: data.message,
+        });
       }
     })
     .catch((error) => {
       console.error("Error:", error);
-      Swal.fire({ icon: "error", title: "Error", text: "Something went wrong!" });
+      Swal.fire({
+        position: "top",
+        toast: true,
+        showConfirmButton: false,
+        timer: 1500,
+        icon: "error",
+        title: "Error",
+        text: "Something went wrong!",
+      });
     });
 }
-
 
 //##########################################
 //  PRINT OUTS FOR POS PAGE
 //##########################################
 
 function printReceipt(TransactionNo) {
-  const printWindow = window.open(`../Reports/Receipt.php?TransactionNo=${encodeURIComponent(TransactionNo)}`, '_blank', 'width=800,height=600');
+  const printWindow = window.open(
+    `../Reports/Receipt.php?TransactionNo=${encodeURIComponent(TransactionNo)}`,
+    "_blank",
+    "width=800,height=600"
+  );
   if (printWindow) {
-      printWindow.print();
+    printWindow.print();
   } else {
-      Swal.fire({ icon: "error", title: "Error", text: "Pop-up blocked! Please allow pop-ups for this site." });
+    Swal.fire({
+      position: "top",
+      toast: true,
+      showConfirmButton: false,
+      timer: 1500,
+      icon: "error",
+      title: "Error",
+      text: "Pop-up blocked! Please allow pop-ups for this site.",
+    });
   }
 }
 
-
-function printEndOfShift(AccountID) {
-  const printWindow = window.open(`../Reports/zReport.php?AccountID=${encodeURIComponent(AccountID)}`, '_blank', 'width=800,height=600');
+function printEndOfShift(AccountID, ShiftNumber) {
+  const printWindow = window.open(
+    `../Reports/zReport.php?AccountID=${encodeURIComponent(
+      AccountID
+    )}&ShiftNumber=${encodeURIComponent(ShiftNumber)}`,
+    "_blank",
+    "width=800,height=600"
+  );
   if (printWindow) {
-      printWindow.focus();
+    printWindow.focus();
   } else {
-      Swal.fire({ icon: "error", title: "Error", text: "Pop-up blocked! Please allow pop-ups for this site." });
+    Swal.fire({
+      position: "top",
+      toast: true,
+      showConfirmButton: false,
+      timer: 1500,
+      icon: "error",
+      title: "Error",
+      text: "Pop-up blocked! Please allow pop-ups for this site.",
+    });
   }
 }
+
+function printXReport(AccountID, ShiftNumber) {
+  const printWindow = window.open(
+    `../Reports/xReport.php?AccountID=${encodeURIComponent(
+      AccountID
+    )}&ShiftNumber=${encodeURIComponent(ShiftNumber)}`,
+    "_blank",
+    "width=800,height=600"
+  );
+  if (printWindow) {
+    printWindow.focus();
+  } else {
+    Swal.fire({
+      position: "top",
+      toast: true,
+      showConfirmButton: false,
+      timer: 1500,
+      icon: "error",
+      title: "Error",
+      text: "Pop-up blocked! Please allow pop-ups for this site.",
+    });
+  }
+}
+
+//##########################################
+//  KEYBOARD SHORTCUTS FOR POS PAGE
+//##########################################
+
+window.addEventListener("keydown", function () {
+  // restrict F5 key to prevent default behavior
+  if (this.event.key === "F5") {
+    this.event.preventDefault();
+  }
+
+  // print x report on F9 key
+  if (this.event.key === "F9") {
+    const shiftData = JSON.parse(localStorage.getItem("shiftData"));
+    const user = JSON.parse(localStorage.getItem("user"));
+    const AccountID = user ? user.ID : "";
+    const ShiftNumber = shiftData ? shiftData.shiftNumber : null;
+    if (AccountID && ShiftNumber) {
+      printXReport(AccountID, ShiftNumber);
+    } else {
+      Swal.fire({
+        position: "top",
+        toast: true,
+        showConfirmButton: false,
+        timer: 1500,
+        icon: "error",
+        title: "Error",
+        text: "You must be logged in and have a valid shift to print the X Report.",
+      });
+      return;
+    }
+    this.event.preventDefault();
+  }
+
+  // add customer information on F8 key with swal prompt
+  // Customer name, address, TIN and business type
+  // if customerinfo is already saved, it should be loaded into the input fields
+  if (this.event.key === "F8") {
+    this.event.preventDefault();
+    const customerInfo = JSON.parse(localStorage.getItem("customerInfo"));
+    Swal.fire({
+      title: "Customer Information",
+      html: `
+        <input type="text" id="customerName" class="swal2-input" placeholder="Customer Name" value="${
+          customerInfo ? customerInfo.name : ""
+        }">
+        <input type="text" id="customerAddress" class="swal2-input" placeholder="Customer Address" value="${
+          customerInfo ? customerInfo.address : ""
+        }">
+        <input type="text" id="customerTIN" class="swal2-input" placeholder="Customer TIN" value="${
+          customerInfo ? customerInfo.tin : ""
+        }">
+        <input type="text" id="customerBusinessType" class="swal2-input" placeholder="Business Type" value="${
+          customerInfo ? customerInfo.businessType : ""
+        }">
+      `,
+      focusConfirm: false,
+      preConfirm: () => {
+        const customerName = document.getElementById("customerName").value;
+        const customerAddress =
+          document.getElementById("customerAddress").value;
+        const customerTIN = document.getElementById("customerTIN").value;
+        const customerBusinessType = document.getElementById(
+          "customerBusinessType"
+        ).value;
+
+        if (
+          !customerName ||
+          !customerAddress ||
+          !customerTIN ||
+          !customerBusinessType
+        ) {
+          Swal.showValidationMessage("Please fill out all fields.");
+          return false;
+        }
+
+        // Save customer information to localStorage or send to server
+        localStorage.setItem(
+          "customerInfo",
+          JSON.stringify({
+            name: customerName,
+            address: customerAddress,
+            tin: customerTIN,
+            businessType: customerBusinessType,
+          })
+        );
+
+        Swal.fire({
+          position: "top",
+          icon: "success",
+          title: "Customer Information Saved",
+          text: "The customer information has been saved successfully.",
+          toast: true,
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      },
+    });
+  }
+});
 
 /* ###################################################
         MODAL MODAL MODAL MODAL MODAL MODAL MODAL
@@ -531,81 +767,96 @@ function closeModal() {
   document.getElementById("endShiftModal").style.display = "none";
 }
 
-document.getElementById("Submit_ChangeofShip").addEventListener("click", function (event) {
-  event.preventDefault(); 
+document
+  .getElementById("Submit_ChangeofShip")
+  .addEventListener("click", function (event) {
+    event.preventDefault();
 
-  const form = document.querySelector("#endShiftForm");
-  if (!form) {
-    console.error("Error: Shift form not found!");
-    return;
-  }
+    const form = document.querySelector("#endShiftForm");
+    if (!form) {
+      console.error("Error: Shift form not found!");
+      return;
+    }
 
-  const user = JSON.parse(localStorage.getItem("user"));
-  const CreatedBy = user ? user.ID : "";
-  const shiftData = JSON.parse(localStorage.getItem("shiftData"));
-  const shiftNumber = shiftData ? shiftData.shiftNumber : null;
-  
-  if (!CreatedBy || !shiftNumber) {
-    Swal.fire({
-      icon: "error",
-      title: "Error",
-      text: "You must be logged in and have a valid shift to end."
-    });
-    return;
-  }
+    const user = JSON.parse(localStorage.getItem("user"));
+    const CreatedBy = user ? user.ID : "";
+    const shiftData = JSON.parse(localStorage.getItem("shiftData"));
+    const shiftNumber = shiftData ? shiftData.shiftNumber : null;
 
-  const data = {
-    CreatedBy,
-    shiftNumber,
-    txt1k: parseInt(document.getElementById("txt1k").value) || 0,
-    txt5H: parseInt(document.getElementById("txt5H").value) || 0,
-    txt2H: parseInt(document.getElementById("txt2H").value) || 0,
-    txt1H: parseInt(document.getElementById("txt1H").value) || 0,
-    txt50: parseInt(document.getElementById("txt50").value) || 0,
-    txt20: parseInt(document.getElementById("txt20").value) || 0,
-    txt10: parseInt(document.getElementById("txt10").value) || 0,
-    txt5: parseInt(document.getElementById("txt5").value) || 0,
-    txt1: parseInt(document.getElementById("txt1").value) || 0,
-    txt25c: parseInt(document.getElementById("txt25c").value) || 0
-  };
-
-  fetch("Actions/POS/endshift.php", {
-    method: "POST",
-    body: JSON.stringify(data),
-    headers: { "Content-Type": "application/json" }
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.status === "success") {
-        Swal.fire({
-          icon: "success",
-          title: data.message,
-          timer: 1000
-        }).then(() => {
-
-          printEndOfShift(CreatedBy);
-
-          setTimeout(() => {
-            document.getElementById("logout-link").click();
-          }, 2000);
-        });
-      } else {
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: data.message
-        });
-      }
-    })
-    .catch((error) => {
-      console.error("Error:", error);
+    if (!CreatedBy || !shiftNumber) {
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "Something went wrong!"
+        text: "You must be logged in and have a valid shift to end.",
       });
-    });
-});
+      return;
+    }
 
+    console.log(
+      "Ending shift for user:",
+      CreatedBy,
+      "Shift Number:",
+      shiftNumber
+    );
 
+    const data = {
+      CreatedBy,
+      shiftNumber,
+      txt1k: parseInt(document.getElementById("txt1k").value) || 0,
+      txt5H: parseInt(document.getElementById("txt5H").value) || 0,
+      txt2H: parseInt(document.getElementById("txt2H").value) || 0,
+      txt1H: parseInt(document.getElementById("txt1H").value) || 0,
+      txt50: parseInt(document.getElementById("txt50").value) || 0,
+      txt20: parseInt(document.getElementById("txt20").value) || 0,
+      txt10: parseInt(document.getElementById("txt10").value) || 0,
+      txt5: parseInt(document.getElementById("txt5").value) || 0,
+      txt1: parseInt(document.getElementById("txt1").value) || 0,
+      txt25c: parseInt(document.getElementById("txt25c").value) || 0,
+    };
 
+    fetch("Actions/POS/endshift.php", {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: { "Content-Type": "application/json" },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === "success") {
+          Swal.fire({
+            position: "top",
+            toast: true,
+            icon: "success",
+            title: data.message,
+            timer: 1000,
+          }).then(() => {
+            printEndOfShift(CreatedBy, shiftNumber);
+
+            setTimeout(() => {
+              document.getElementById("logout-link").click();
+            }, 2000);
+          });
+        } else {
+          Swal.fire({
+            position: "top",
+            toast: true,
+            showConfirmButton: false,
+            timer: 1500,
+            icon: "error",
+            title: "Error",
+            text: data.message,
+          });
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        Swal.fire({
+          position: "top",
+          toast: true,
+          showConfirmButton: false,
+          timer: 1500,
+          icon: "error",
+          title: "Error",
+          text: "Something went wrong!",
+        });
+      });
+  });

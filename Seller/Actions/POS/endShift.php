@@ -25,38 +25,47 @@ $one = isset($data['txt1']) ? (int) $data['txt1'] : 0;
 $twentyFiveCents = isset($data['txt25c']) ? (int) $data['txt25c'] : 0;
 
 $CreatedBy = isset($data['CreatedBy']) ? trim($data['CreatedBy']) : '';
+$ShiftNumber = isset($data['shiftNumber']) ? (int) $data['shiftNumber'] : 0; 
+$ShiftDate = date("Y-m-d");
 
-$ShiftNumber = isset($data['ShiftNumber']) ? (int) $data['ShiftNumber'] : 0; 
-// $ShiftDate = date("Y-m-d"); 
+if (empty($CreatedBy) || $ShiftNumber === 0) {
+    echo json_encode(['status' => 'error', 'message' => 'Missing required fields.' . $ShiftNumber]);
+    exit;
+}
 
 $conn->begin_transaction();
 
 try {
     $stmt = $conn->prepare("
-        INSERT INTO endshiftreport (AccountID, `1000`, `500`, `200`, `100`, `50`, `20`, `10`, `5`, `1`, `25c`, ShiftNumber, ShiftDate, DateTimeCreated) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())");
+        INSERT INTO endshiftreport 
+        (AccountID, `1000`, `500`, `200`, `100`, `50`, `20`, `10`, `5`, `1`, `25c`, ShiftNumber, ShiftDate, DateTimeCreated) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())
+    ");
 
-    $stmt->bind_param("iiiiiiiiiiii", 
+    $stmt->bind_param("iiiiiiiiiiiis", 
         $CreatedBy, $oneThousand, $fiveHundred, $twoHundred, $oneHundred, 
-        $fifty, $twenty, $ten, $five, $one, $twentyFiveCents, $ShiftNumber //, $ShiftDate
+        $fifty, $twenty, $ten, $five, $one, $twentyFiveCents, $ShiftNumber, $ShiftDate
     );
 
     $stmt->execute();
 
-    // update the shifts table to set the end time and status
+    // Update shift status
     $updateStmt = $conn->prepare("
         UPDATE shifts 
         SET EndTime = NOW(), Status = 'completed' 
-        WHERE AccountID = ? AND ShiftNumber = ? AND EndTime IS NULL");
+        WHERE AccountID = ? AND ShiftNumber = ? AND EndTime IS NULL
+    ");
     $updateStmt->bind_param("ii", $CreatedBy, $ShiftNumber);
     $updateStmt->execute();
+
     if ($updateStmt->affected_rows === 0) {
         throw new Exception("No active shift found for the given account and shift number.");
     }
-    $updateStmt->close();
-    $stmt->close();
 
+    $stmt->close();
+    $updateStmt->close();
     $conn->commit();
+
     echo json_encode(['status' => 'success', 'message' => 'End of shift report saved successfully.']);
 
 } catch (Exception $e) {

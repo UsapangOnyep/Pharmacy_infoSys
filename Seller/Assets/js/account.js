@@ -3,7 +3,7 @@ function Addaccount(event) {
 
   const form = document.querySelector("#addaccountForm");
   const formData = new FormData(form);
-  
+
   const user = JSON.parse(localStorage.getItem("user"));
   const CreatedBy = user ? user.ID : "";
   formData.append("CreatedBy", CreatedBy);
@@ -31,6 +31,8 @@ function Addaccount(event) {
       console.log("Server response:", data);
       if (data.status === "success") {
         Swal.fire({
+          position: "top",
+          toast: true,
           icon: "success",
           title: data.message,
           showConfirmButton: false,
@@ -45,6 +47,10 @@ function Addaccount(event) {
     .catch((error) => {
       console.error("Error:", error);
       Swal.fire({
+        position: "top",
+        toast: true,
+        showConfirmButton: false,
+        timer: 1500,
         icon: "error",
         title: "Error",
         text: error.message || "Something went wrong!",
@@ -71,6 +77,8 @@ function Restoreaccount(ID) {
         .then((data) => {
           if (data.status === "success") {
             Swal.fire({
+              position: "top",
+              toast: true,
               icon: "success",
               title: data.message,
               showConfirmButton: false,
@@ -80,6 +88,10 @@ function Restoreaccount(ID) {
             });
           } else {
             Swal.fire({
+              position: "top",
+              toast: true,
+              showConfirmButton: false,
+              timer: 1500,
               icon: "error",
               title: "Error",
               text: data.message || "Failed to restore account.",
@@ -88,6 +100,10 @@ function Restoreaccount(ID) {
         })
         .catch((error) => {
           Swal.fire({
+            position: "top",
+            toast: true,
+            showConfirmButton: false,
+            timer: 1500,
             icon: "error",
             title: "Error",
             text: error.message || "Something went wrong!",
@@ -117,6 +133,8 @@ function Removeaccount(ID) {
           console.log("Server response:", data);
           if (data.status === "success") {
             Swal.fire({
+              position: "top",
+              toast: true,
               icon: "success",
               title: data.message,
               showConfirmButton: false,
@@ -127,6 +145,10 @@ function Removeaccount(ID) {
             });
           } else {
             Swal.fire({
+              position: "top",
+              toast: true,
+              showConfirmButton: false,
+              timer: 1500,
               icon: "error",
               title: "Error",
               text: data.message || "Failed to remove account.",
@@ -136,6 +158,10 @@ function Removeaccount(ID) {
         .catch((error) => {
           console.error("Error:", error);
           Swal.fire({
+            position: "top",
+            toast: true,
+            showConfirmButton: false,
+            timer: 1500,
             icon: "error",
             title: "Error",
             text: error.message || "Something went wrong!",
@@ -164,6 +190,8 @@ function Resetaccount(ID) {
         .then((data) => {
           if (data.status === "success") {
             Swal.fire({
+              position: "top",
+              toast: true,
               icon: "success",
               title: data.message,
               showConfirmButton: false,
@@ -173,6 +201,10 @@ function Resetaccount(ID) {
             });
           } else {
             Swal.fire({
+              position: "top",
+              toast: true,
+              showConfirmButton: false,
+              timer: 1500,
               icon: "error",
               title: "Error",
               text: data.message || "Failed to restore account.",
@@ -181,6 +213,10 @@ function Resetaccount(ID) {
         })
         .catch((error) => {
           Swal.fire({
+            position: "top",
+            toast: true,
+            showConfirmButton: false,
+            timer: 1500,
             icon: "error",
             title: "Error",
             text: error.message || "Something went wrong!",
@@ -202,12 +238,17 @@ function editaccount(accountID) {
     .then((data) => {
       if (data.status === "success") {
         document.getElementById("editaccountID").value = data.account.ID;
-        document.getElementById("editaccountName").value = data.account.FullName;
+        document.getElementById("editaccountName").value =
+          data.account.FullName;
         document.getElementById("editaccountEmail").value = data.account.Email;
-        document.getElementById("editaccountPosition").value = data.account.Position;
-        document.getElementById("editaccountUsername").value = data.account.Username;
-        document.getElementById("editaccountType").value = data.account.UserType;
-        document.getElementById("editaccountStatus").value = data.account.Status;
+        document.getElementById("editaccountPosition").value =
+          data.account.Position;
+        document.getElementById("editaccountUsername").value =
+          data.account.Username;
+        document.getElementById("editaccountType").value =
+          data.account.UserType;
+        document.getElementById("editaccountStatus").value =
+          data.account.Status;
       } else {
         alert("Error loading account data.");
       }
@@ -230,7 +271,7 @@ document
     const user = JSON.parse(localStorage.getItem("user"));
     const CreatedBy = user ? user.ID : "";
     formData.append("CreatedBy", CreatedBy);
-  
+
     const url = "Actions/account/edit.php";
 
     fetch(url, {
@@ -241,15 +282,21 @@ document
       .then((data) => {
         if (data.status === "success") {
           Swal.fire({
-            icon: "success",
-            title: data.message,
+            position: "top",
+            toast: true,
             showConfirmButton: false,
             timer: 1500,
+            icon: "success",
+            title: data.message,
           }).then(() => {
             window.location.reload();
           });
         } else {
           Swal.fire({
+            position: "top",
+            toast: true,
+            showConfirmButton: false,
+            timer: 1500,
             icon: "error",
             title: "Error",
             text: data.message,
@@ -259,6 +306,10 @@ document
       .catch((error) => {
         console.error("Error:", error);
         Swal.fire({
+          position: "top",
+          toast: true,
+          showConfirmButton: false,
+          timer: 1500,
           icon: "error",
           title: "Error",
           text: "Something went wrong!",

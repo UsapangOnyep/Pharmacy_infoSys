@@ -176,6 +176,8 @@ function Addsupplier(event) {
       console.log("Server response:", data);
       if (data.status === "success") {
         Swal.fire({
+          position: "top",
+          toast: true,
           icon: "success",
           title: data.message,
           showConfirmButton: false,
@@ -190,6 +192,8 @@ function Addsupplier(event) {
     .catch((error) => {
       console.error("Error:", error);
       Swal.fire({
+        position: "top",
+        toast: true,
         icon: "error",
         title: "Error",
         text: error.message || "Something went wrong!",
@@ -228,7 +232,7 @@ document
 
     const form = document.querySelector("#editSupplierForm");
     const formData = new FormData(form);
-    
+
     const user = JSON.parse(localStorage.getItem("user"));
     const CreatedBy = user ? user.ID : "";
     formData.append("CreatedBy", CreatedBy);
@@ -243,6 +247,8 @@ document
       .then((data) => {
         if (data.status === "success") {
           Swal.fire({
+            position: "top",
+            toast: true,
             icon: "success",
             title: data.message,
             showConfirmButton: false,
@@ -252,6 +258,10 @@ document
           });
         } else {
           Swal.fire({
+            position: "top",
+            toast: true,
+            showConfirmButton: false,
+            timer: 1500,
             icon: "error",
             title: "Error",
             text: data.message,
@@ -261,6 +271,10 @@ document
       .catch((error) => {
         console.error("Error:", error);
         Swal.fire({
+          position: "top",
+          toast: true,
+          showConfirmButton: false,
+          timer: 1500,
           icon: "error",
           title: "Error",
           text: "Something went wrong!",
@@ -287,6 +301,8 @@ function RestoreSupplier(ID) {
         .then((data) => {
           if (data.status === "success") {
             Swal.fire({
+              position: "top",
+              toast: true,
               icon: "success",
               title: data.message,
               showConfirmButton: false,
@@ -296,6 +312,10 @@ function RestoreSupplier(ID) {
             });
           } else {
             Swal.fire({
+              position: "top",
+              toast: true,
+              showConfirmButton: false,
+              timer: 1500,
               icon: "error",
               title: "Error",
               text: data.message || "Failed to restore supplier.",
@@ -304,6 +324,10 @@ function RestoreSupplier(ID) {
         })
         .catch((error) => {
           Swal.fire({
+            showConfirmButton: false,
+            timer: 1500,
+            position: "top",
+            toast: true,
             icon: "error",
             title: "Error",
             text: error.message || "Something went wrong!",
@@ -333,6 +357,8 @@ function RemoveSupplier(ID) {
           console.log("Server response:", data);
           if (data.status === "success") {
             Swal.fire({
+              position: "top",
+              toast: true,
               icon: "success",
               title: data.message,
               showConfirmButton: false,
@@ -343,6 +369,10 @@ function RemoveSupplier(ID) {
             });
           } else {
             Swal.fire({
+              position: "top",
+              toast: true,
+              showConfirmButton: false,
+              timer: 1500,
               icon: "error",
               title: "Error",
               text: data.message || "Failed to remove supplier.",
@@ -352,6 +382,10 @@ function RemoveSupplier(ID) {
         .catch((error) => {
           console.error("Error:", error);
           Swal.fire({
+            position: "top",
+            toast: true,
+            showConfirmButton: false,
+            timer: 1500,
             icon: "error",
             title: "Error",
             text: error.message || "Something went wrong!",

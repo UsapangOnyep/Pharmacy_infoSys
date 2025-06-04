@@ -24,7 +24,7 @@ if ($result->num_rows > 0) {
 
 // Second query to fetch invoice items
 $sql = "
-SELECT i.ItemName, sii.Qty, sii.Price, ROUND(((sii.Qty * sii.Price) * (sii.Discount / 100)),2) as Discount
+SELECT i.ItemName, sii.Qty, sii.Price, ROUND(((sii.Qty * sii.Price) * (sii.Discount / 100)),2) as Discount, VATType
 FROM salestransactionitems sii 
 INNER JOIN stocks s ON s.ID = sii.StockID 
 INNER JOIN items i ON i.id = s.ItemID
@@ -150,89 +150,100 @@ $totalAmount = 0;
                 </thead>
                 <tbody>
                     <?php
+                    $vatableSales = 0;
+                    $vatExemptSales = 0;
+                    $vatZeroRatedSales = 0;
+                    $totalAmount = 0;
+
                     foreach ($orderItems as $item) {
                         $amount = $item['Qty'] * $item['Price'];
-                        $formattedAmount = number_format($amount, 2);
-                        $formattedPrice = number_format($item['Price'], 2);
-                        $discount = 0.00;
-                        if ($item['Discount'] > 0) {
-                            $discount = number_format($item['Discount'], 2);
-                        } else {
-                            $discount = "0.00";
+                        $discount = ($item['Discount'] > 0) ? $item['Discount'] : 0.00;
+                        $netAmount = $amount - $discount;
+
+                        switch ($item['VATType']) {
+                            case 'VATable':
+                                $vatableSales += $netAmount / 1.12;
+                                break;
+                            case 'VATExempt':
+                                $vatExemptSales += $netAmount;
+                                break;
+                            case 'VATZeroRated':
+                                $vatZeroRatedSales += $netAmount;
+                                break;
                         }
-                        ?>
+
+                        $totalAmount += $netAmount;
+                    ?>
                         <tr>
-                            <td colspan="3"> <?php echo $item['ItemName']; ?></td>
-                            <td></td>
-                            <td></td>
+                            <td colspan="3"><?php echo $item['ItemName']; ?></td>
                             <td></td>
                         </tr>
                         <tr>
                             <td></td>
                             <td style="text-align: center;"><?php echo $item['Qty']; ?></td>
-                            <td style="text-align: right;"><?php echo $formattedPrice; ?></td>
-                            <td><?php echo $formattedAmount; ?></td>
+                            <td style="text-align: right;"><?php echo number_format($item['Price'], 2); ?></td>
+                            <td><?php echo number_format($amount, 2); ?></td>
                         </tr>
-                        
                         <?php if ($discount > 0) { ?>
                             <tr>
-                                <td colspan="3" style="text-align: center; font-size: 7pt;"><i>*** less <?php echo $discount; ?> ***</i></td>
-                                <td><?php echo number_format($formattedAmount - $discount, 2); ?></td>
+                                <td colspan="3" style="text-align: center; font-size: 7pt;"><i>*** less <?php echo number_format($discount, 2); ?> ***</i></td>
+                                <td><?php echo number_format($netAmount, 2); ?></td>
                             </tr>
                         <?php } ?>
+                    <?php } ?>
 
-                        <?php 
-                        if ($item['Discount'] > 0) {
-                            $amount -= $item['Discount'];
-                        }
+                    <?php
+                    // Apply transaction-level discount proportionally
+                    $transactionDiscount = $orderDetails['Discount'];
+                    $grossTotal = $vatableSales + $vatExemptSales + $vatZeroRatedSales;
 
-                        $totalAmount += $amount;
-                        
+                    if ($grossTotal > 0 && $transactionDiscount > 0) {
+                        $ratio = $transactionDiscount / $grossTotal;
+                        $vatableSales -= $vatableSales * $ratio;
+                        $vatExemptSales -= $vatExemptSales * $ratio;
+                        $vatZeroRatedSales -= $vatZeroRatedSales * $ratio;
                     }
+
+                    // Final VAT computation
+                    $vatAmount = $vatableSales * 0.12;
                     ?>
-
-
                 </tbody>
                 <tfoot>
                     <tr>
                         <td colspan="3">Sub Total</td>
                         <td><?php echo number_format($totalAmount, 2); ?></td>
                     </tr>
-
-
-                    <tr style="font-weight: bold; font-size: 10pt;">
-                        <td colspan="3">TOTAL DUE</td>
-                        <td><?php echo number_format($totalAmount, 2); ?></td>
-                    </tr>
                     <tr>
                         <td colspan="3">Discount</td>
-                        <td><?php echo number_format($orderDetails["Discount"], 2); ?></td>
+                        <td><?php echo number_format($transactionDiscount, 2); ?></td>
+                    </tr>
+                    <tr style="font-weight: bold;">
+                        <td colspan="3">TOTAL DUE</td>
+                        <td><?php echo number_format($totalAmount - $transactionDiscount, 2); ?></td>
                     </tr>
                     <tr>
                         <td colspan="3">CASH</td>
                         <td><?php echo number_format($orderDetails["CashTendered"], 2); ?></td>
                     </tr>
-                    <tr style="font-weight: bold; font-size: 10pt;">
-                        <td colspan="3"><strong>CHANGE</strong></td>
-                        <td>
-                            <?php echo number_format($orderDetails["CashChange"], 2); ?></td>
+                    <tr style="font-weight: bold;">
+                        <td colspan="3">CHANGE</td>
+                        <td><?php echo number_format($orderDetails["CashChange"], 2); ?></td>
                     </tr>
-
                     <tr>
                         <td colspan="3">VATable Sales</td>
-                        <td>0.00</td>
+                        <td><?php echo number_format($vatableSales, 2); ?></td>
                     </tr>
                     <tr>
                         <td colspan="3">Vat-Exempt Sales</td>
-                        <td>0.00</td>
+                        <td><?php echo number_format($vatExemptSales, 2); ?></td>
                     </tr>
                     <tr>
                         <td colspan="3">VAT Zero-Rated Sales</td>
-                        <td>0.00</td>
+                        <td><?php echo number_format($vatZeroRatedSales, 2); ?></td>
                     </tr>
                     <tr>
                         <td colspan="3">VAT Amount</td>
-                        <td>0.00</td>
+                        <td><?php echo number_format($vatAmount, 2); ?></td>
                     </tr>
                 </tfoot>
             </table>
@@ -248,22 +259,7 @@ $totalAmount = 0;
 
         <div class="cx-data">
             <table>
-                <tr>
-                    <td>Customer Name:</td>
-                    <td><?php echo ""; ?></td>
-                </tr>
-                <tr>
-                    <td>Address:</td>
-                    <td><?php echo ""; ?></td>
-                </tr>
-                <tr>
-                    <td>TIN:</td>
-                    <td><?php echo ""; ?></td>
-                </tr>
-                <tr>
-                    <td>Business Style:</td>
-                    <td><?php echo ""; ?></td>
-                </tr>
+                <!-- AUTO GENERATE CUSTOMER INFORMATION HERE -->
             </table>
         </div>
 
@@ -315,9 +311,36 @@ $totalAmount = 0;
         </div>
     </div>
     <script>
-        window.onload = function () {
+        window.onload = function() {
+
+            const customerInfo = JSON.parse(localStorage.getItem("customerInfo")) || {};
+
+            const cxData = document.querySelector('.cx-data table');
+            cxData.innerHTML = `
+                <tr>
+                    <td>Customer Name:</td>
+                    <td>${customerInfo.name || ''}</td>
+                </tr>
+                <tr>
+                    <td>Address:</td>
+                    <td>${customerInfo.address || ''}</td>
+                </tr>
+                <tr>
+                    <td>TIN:</td>
+                    <td>${customerInfo.tin || ''}</td>  
+                </tr>
+                <tr>
+                    <td>Business Style:</td>
+                    <td>${customerInfo.businessType || ''}</td>
+                </tr>`;
+
             window.print();
-            setTimeout(() => window.close(), 1000);
+            setTimeout(() => {
+                // Clear Customer data from localStorage
+                localStorage.removeItem("customerInfo");
+                // Close the window after printing
+                window.close();
+            }, 1000);
         };
     </script>
 </body>
