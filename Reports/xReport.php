@@ -3,7 +3,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '../Database/connection.php';
 date_default_timezone_set('Asia/Manila');
 
 $AccountID = isset($_GET['AccountID']) ? trim($_GET['AccountID']) : '';
-$ShiftNumber = 1;
+$ShiftNumber = isset($_GET['ShiftNumber']) ? trim($_GET['ShiftNumber']) : '';
 
 $sql = "CALL xReport(?, ?)";
 $stmt = $conn->prepare($sql);
@@ -48,11 +48,11 @@ $conn->close();
             </tr>
             <tr>
                 <td>Opening Balance</td>
-                <td><?php echo number_format(0, 2); ?></td>
+                <td><?php echo $reportData["OpeningBalance"]; ?></td>
             </tr>
             <tr>
                 <td>Opened At</td>
-                <td></td>
+                <td><?php echo $reportData["StartTime"]; ?></td>
             </tr>
             <tr>
                 <td>Opened By</td>

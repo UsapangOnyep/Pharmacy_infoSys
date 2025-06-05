@@ -56,14 +56,14 @@ $conn->close();
             </tr>
             <tr>
                 <td>Opening Balance</td>
-                <td><?php echo number_format("0.00", 2); ?></td>
+                <td><?php echo $reportData["OpeningBalance"]; ?></td>
             </tr>
             <tr>
                 <td>Opened At</td>
-                <td><?php echo ""; ?></td>
+                <td><?php echo $reportData["StartTime"]; ?></td>
             </tr>
             <tr>
-                <td>Opended By</td>
+                <td>Opened By</td>
                 <td><?php echo $reportData["CashierName"]; ?></td>
             </tr>
             <tr>

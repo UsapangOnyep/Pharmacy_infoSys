@@ -91,26 +91,33 @@ function setSelectedItemInfo() {
           updateRowTotal(qtyInput);
         } else {
           const row = document.createElement("tr");
-          row.innerHTML = `
-            <td hidden>${item.id}</td>
-            <td>${item.ItemName}</td>
-            <td>${item.ItemDesc}</td>
-            <td><span class="item-price">${parseFloat(item.PriceCurrent).toFixed(2)}</span></td>
-            <td><input type="number" class="qty" value="1" min="1" onchange="updateRowTotal(this)" /></td>
-            <td><input type="number" class="discount" value="0" min="0" max="100" onchange="updateRowTotal(this)" /></td>
-            <td><span class="total-price">${parseFloat(item.PriceCurrent).toFixed(2)}</span></td>
-            <td>
-              <button onclick="removeOrder(this)">Remove</button>
-            </td>
-          `;
-          tableBody.appendChild(row);
+      row.innerHTML = `
+        <td hidden>${item.id}</td>
+        <td>${item.ItemName.length > 100 ? item.ItemName.slice(0, 100) + "..." : item.ItemName}</td>
+        <td>${item.ItemDesc.length > 100 ? item.ItemDesc.slice(0, 100) + "..." : item.ItemDesc}</td>
+        <td hidden><span class="item-price">${item.PriceCurrent}</span></td>
+        <td><span class="formatted-item-price">${formatAsCurrency(item.PriceCurrent)}</span></td>
+        <td><input type="number" class="qty" value="1" min="1" max="${item.QTY}" onchange="updateRowTotal(this)" /></td>
+        <td><input type="number" class="discount" value="0" min="0" max="100" onchange="updateRowTotal(this)" /></td>
+        <td hidden><span class="total-price">${item.PriceCurrent}</span></td>
+        <td><span class="formatted-total-price">${formatAsCurrency(item.PriceCurrent)}</span></td>
+        <td>
+          <button class="btn-form-delete" onclick="removeOrder(this)">Remove</button>
+        </td>
+      `;
+      tableBody.appendChild(row);
         }
+        
+        console.log("Item added to table:", item.ItemName);
+        console.log("Max Quantity:", item.QTY);
 
         document.getElementById("ItemName").value = "";
         setTimeout(() => {
           document.getElementById("ItemName").focus();
           document.getElementById("ItemName").value = "";
         }, 0);
+
+        computeTotal();
       };
 
       suggestionBox.appendChild(suggestionItem);
@@ -125,7 +132,46 @@ function validateDiscountInput(input) {
   if (isNaN(value) || value < 0) {
     input.value = 0;
   } else if (value > 100) {
+    swal.fire({
+      position: "top",
+      toast: true,
+      showConfirmButton: false,
+      timer: 1500,
+      icon: "warning",
+      title: "Warning",
+      text: `Discount cannot exceed 100%. Setting to maximum.`,
+    });
+
     input.value = 100;
+  }
+}
+
+function validateQtyInput(input) {
+  const value = parseFloat(input.value);
+  if (isNaN(value) || value < 1) {
+    swal.fire({
+      position: "top",
+      toast: true,
+      showConfirmButton: false,
+      timer: 1500,
+      icon: "warning",
+      title: "Warning",
+      text: `Quantity is less than ${input.min}. Setting to minimum.`,
+    });
+
+    input.value = 1;
+  } else if (value > input.max) {
+    swal.fire({
+      position: "top",
+      toast: true,
+      showConfirmButton: false,
+      timer: 1500,
+      icon: "warning",
+      title: "Warning",
+      text: `Quantity cannot exceed ${input.max}. Setting to maximum.`,
+    });
+
+    input.value = input.max;
   }
 }
 
@@ -136,7 +182,12 @@ function debounce(func, delay) {
 }
 
 function updateRowTotal(inputElement) {
-  validateDiscountInput(inputElement);
+  if (inputElement.classList.contains("qty")) {
+    validateQtyInput(inputElement);
+  } else if (inputElement.classList.contains("discount")) {
+    validateDiscountInput(inputElement);
+  }
+
   const row = inputElement.closest("tr");
   const priceCell = row.querySelector(".total-price");
   const qty = parseFloat(row.querySelector(".qty").value);
@@ -153,7 +204,7 @@ function updateRowTotal(inputElement) {
   const total = totalBeforeDiscount - discountAmount;
 
   priceCell.textContent = total.toFixed(2); // Update total price cell
-
+  row.querySelector(".formatted-total-price").textContent = formatAsCurrency(total);
   computeTotal();
 }
 
@@ -246,19 +297,28 @@ function addItemToTableByNameOrBarcode(itemIdentifier) {
     } else {
       // If the item is not in the table, create a new row
       const row = document.createElement("tr");
+
+      console.log("createElement:", item.ItemName);
+
       row.innerHTML = `
         <td hidden>${item.id}</td>
-        <td>${item.ItemName}</td>
-        <td>${item.ItemDesc}</td>
-        <td><span class="item-price">${item.PriceCurrent}</span></td>
+        <td>${item.ItemName.length > 75 ? item.ItemName.substring(0, 75) + '...' : item.ItemName}</td>
+        <td>${item.ItemDesc.length > 75 ? item.ItemDesc.substring(0, 75) + '...' : item.ItemDesc}</td>
+        <td hidden><span class="item-price">${item.PriceCurrent}</span></td>
+        <td><span class="formatted-item-price">${formatAsCurrency(item.PriceCurrent)}</span></td>
         <td><input type="number" class="qty" value="1" min="1" onchange="updateRowTotal(this)" /></td>
         <td><input type="number" class="discount" value="0" min="0" max="100" onchange="updateRowTotal(this)" /></td>
-        <td><span class="total-price">${item.PriceCurrent}</span></td>
+        <td hidden><span class="total-price">${item.PriceCurrent}</span></td>
+        <td><span class="formatted-total-price">${formatAsCurrency(item.PriceCurrent)}</span></td>
         <td>
-          <button onclick="removeOrder(this)">Remove</button>
+          <button class="btn-form-delete" onclick="removeOrder(this)">Remove Remove Remove</button>
+          <span>Something here</span>
         </td>
       `;
       tableBody.appendChild(row);
+
+      console.log("Item added to table:", item.ItemName);
+      console.log("Max Quantity:", item.QTY);
 
       setTimeout(() => {
         document.getElementById("ItemName").focus();
@@ -660,7 +720,70 @@ function printXReport(AccountID, ShiftNumber) {
 //  KEYBOARD SHORTCUTS FOR POS PAGE
 //##########################################
 
+/*
+  Keyboard shortcuts:
+  - F2: Focus on Item Name input field
+  - F3: Open Transaction History modal
+  - F4: Open Void History modal
+  - F5: Prevent default behavior (refresh) 
+  - F6: Open Reprint modal
+  - F7: Open Check Price Modal 
+  - F8: Add customer information with Swal prompt
+  - F9: Print X Report
+*/
+
 window.addEventListener("keydown", function () {
+  // focus on Item Name input field on F2 key
+  if (this.event.key === "F2") {
+    document.getElementById("ItemName").focus();
+  }
+
+  // open Transaction History modal on F3 key
+  if (this.event.key === "F3") {
+    this.event.preventDefault();
+    const transactionHistoryModal = document.getElementById(
+      "transactionHistoryModal"
+    );
+    if (transactionHistoryModal) {
+      transactionHistoryModal.style.display = "block";
+    } else {
+      console.error("Transaction History modal not found.");
+    }
+  }
+
+  // open Void History modal on F4 key
+  if (this.event.key === "F4") {
+    this.event.preventDefault();
+    const voidHistoryModal = document.getElementById("voidHistoryModal");
+    if (voidHistoryModal) {
+      voidHistoryModal.style.display = "block";
+    } else {
+      console.error("Void History modal not found.");
+    }
+  }
+
+  // open Reprint modal on F6 key
+  if (this.event.key === "F6") {
+    this.event.preventDefault();
+    const reprintModal = document.getElementById("reprintModal");
+    if (reprintModal) {
+      reprintModal.style.display = "block";
+    } else {
+      console.error("Reprint modal not found.");
+    }
+  }
+
+  // open Check Price modal on F7 key
+  if (this.event.key === "F7") {
+    this.event.preventDefault();
+    const checkPriceModal = document.getElementById("checkPriceModal");
+    if (checkPriceModal) {
+      checkPriceModal.style.display = "block";
+    } else {
+      console.error("Check Price modal not found.");
+    }
+  }
+
   // restrict F5 key to prevent default behavior
   if (this.event.key === "F5") {
     this.event.preventDefault();

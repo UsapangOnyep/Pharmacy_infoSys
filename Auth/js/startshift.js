@@ -19,9 +19,50 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
+    if (!document.getElementById("openingBalance").value) {
+      Swal.fire({
+        position: "top",
+        toast: true,
+        showConfirmButton: false,
+        timer: 1500,
+        icon: "error",
+        title: "Error",
+        text: "Please enter an opening balance.",
+      });
+      return;
+    }
+
+    if (isNaN(document.getElementById("openingBalance").value)) {
+      Swal.fire({
+        position: "top",
+        toast: true,
+        showConfirmButton: false,
+        timer: 1500,
+        icon: "error",
+        title: "Error",
+        text: "Opening balance must be a number.",
+      });
+      return;
+    }
+    
+    if (parseFloat(document.getElementById("openingBalance").value) < 0) {
+      Swal.fire({
+        position: "top",
+        toast: true,
+        showConfirmButton: false,
+        timer: 1500,
+        icon: "error",
+        title: "Error",
+        text: "Opening balance cannot be negative.",
+      });
+      return;
+    }
+
+    // Prepare form data to send to the server
     const formData = new FormData();
     formData.append("action", "startShift");
     formData.append("user_id", user.ID);
+    formData.append("opening_balance", document.getElementById("openingBalance").value);
 
     fetch("start-shift-action.php", {
       method: "POST",

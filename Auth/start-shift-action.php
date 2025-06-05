@@ -33,15 +33,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["action"]) && $_POST["
 
         $shiftRow = $shiftResult->fetch_assoc();
         $shiftNumber = $shiftRow['ID'];
+        $openingBalance = $_POST['openingBalance'] ?? 0;
 
         // Insert the new shift record
-        $query = "INSERT INTO shifts (`AccountID`, `StartTime`, `EndTime`, `Status`, `ShiftNumber`) VALUES (?, NOW(), NULL, 'active', ?)";
+        $query = "INSERT INTO shifts (`AccountID`, `StartTime`, `EndTime`, `Status`, `ShiftNumber`, `openingBalance`) VALUES (?, NOW(), NULL, 'active', ?, ?)";
         $stmt = $conn->prepare($query);
         if (!$stmt) {
             throw new Exception("Failed to prepare statement: " . $conn->error);
         }
 
-        $stmt->bind_param("ii", $userId, $shiftNumber);
+        $stmt->bind_param("iid", $userId, $shiftNumber, $openingBalance);
         if (!$stmt->execute()) {
             throw new Exception("Failed to start shift: " . $stmt->error);
         }
