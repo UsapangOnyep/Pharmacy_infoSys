@@ -18,11 +18,13 @@ $sql = "SELECT
             t3.Category,
             t3.Brand,
             t3.Model,
-            t2.ExpiryDate
+            t2.ExpiryDate,
+            IFNULL(t4.Reason, '') AS Remarks
         FROM
             invtransaction t1
             INNER JOIN stocks t2 ON t1.StockID = t2.ID
             INNER JOIN items t3 ON t2.ItemID = t3.ID
+            LEFT JOIN tbl_disposed t4 ON t1.ReferenceCode = t4.ID AND t1.ActionTaken = 'Dispose'
         ORDER BY `TransactionDate` DESC";
 
 $result = $conn->query($sql);
@@ -61,6 +63,7 @@ $html = '<!DOCTYPE html>
                 <th>Brand</th>
                 <th>Model</th>
                 <th>Expiry Date</th>
+                <th>Remarks</th>
             </tr>
         </thead>
         <tbody id="tableBody">';
@@ -77,6 +80,7 @@ foreach ($suppliers as $supplier) {
                     <td>' . htmlspecialchars($supplier['Brand']) . '</td>
                     <td>' . htmlspecialchars($supplier['Model']) . '</td>
                     <td>' . htmlspecialchars($supplier['ExpiryDate']) . '</td>
+                    <td>' . htmlspecialchars($supplier['Remarks']) . '</td>
                 </tr>';
 
 }

@@ -2,9 +2,11 @@ document.addEventListener("DOMContentLoaded", function () {
   const startShiftButton = document.getElementById("startShiftButton");
 
   startShiftButton.addEventListener("click", function () {
+    event.preventDefault();
     const user = JSON.parse(localStorage.getItem("user"));
 
     console.log("User data:", user); // Debugging line to check user data
+    console.log("Opening balance value:", document.getElementById("openingBalance").value); // Debugging line to check opening balance
 
     if (!user || !user.ID) {
       Swal.fire({
@@ -62,8 +64,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const formData = new FormData();
     formData.append("action", "startShift");
     formData.append("user_id", user.ID);
-    formData.append("opening_balance", document.getElementById("openingBalance").value);
+    formData.append("openingBalance", document.getElementById("openingBalance").value);
 
+    
     fetch("start-shift-action.php", {
       method: "POST",
       body: formData,

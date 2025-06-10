@@ -91,23 +91,37 @@ function setSelectedItemInfo() {
           updateRowTotal(qtyInput);
         } else {
           const row = document.createElement("tr");
-      row.innerHTML = `
+          row.innerHTML = `
         <td hidden>${item.id}</td>
-        <td>${item.ItemName.length > 100 ? item.ItemName.slice(0, 100) + "..." : item.ItemName}</td>
-        <td>${item.ItemDesc.length > 100 ? item.ItemDesc.slice(0, 100) + "..." : item.ItemDesc}</td>
+        <td>${
+          item.ItemName.length > 100
+            ? item.ItemName.slice(0, 100) + "..."
+            : item.ItemName
+        }</td>
+        <td>${
+          item.ItemDesc.length > 100
+            ? item.ItemDesc.slice(0, 100) + "..."
+            : item.ItemDesc
+        }</td>
         <td hidden><span class="item-price">${item.PriceCurrent}</span></td>
-        <td><span class="formatted-item-price">${formatAsCurrency(item.PriceCurrent)}</span></td>
-        <td><input type="number" class="qty" value="1" min="1" max="${item.QTY}" onchange="updateRowTotal(this)" /></td>
+        <td><span class="formatted-item-price">${formatAsCurrency(
+          item.PriceCurrent
+        )}</span></td>
+        <td><input type="number" class="qty" value="1" min="1" max="${
+          item.QTY
+        }" onchange="updateRowTotal(this)" /></td>
         <td><input type="number" class="discount" value="0" min="0" max="100" onchange="updateRowTotal(this)" /></td>
         <td hidden><span class="total-price">${item.PriceCurrent}</span></td>
-        <td><span class="formatted-total-price">${formatAsCurrency(item.PriceCurrent)}</span></td>
+        <td><span class="formatted-total-price">${formatAsCurrency(
+          item.PriceCurrent
+        )}</span></td>
         <td>
           <button class="btn-form-delete" onclick="removeOrder(this)">Remove</button>
         </td>
       `;
-      tableBody.appendChild(row);
+          tableBody.appendChild(row);
         }
-        
+
         console.log("Item added to table:", item.ItemName);
         console.log("Max Quantity:", item.QTY);
 
@@ -204,7 +218,8 @@ function updateRowTotal(inputElement) {
   const total = totalBeforeDiscount - discountAmount;
 
   priceCell.textContent = total.toFixed(2); // Update total price cell
-  row.querySelector(".formatted-total-price").textContent = formatAsCurrency(total);
+  row.querySelector(".formatted-total-price").textContent =
+    formatAsCurrency(total);
   computeTotal();
 }
 
@@ -302,14 +317,26 @@ function addItemToTableByNameOrBarcode(itemIdentifier) {
 
       row.innerHTML = `
         <td hidden>${item.id}</td>
-        <td>${item.ItemName.length > 75 ? item.ItemName.substring(0, 75) + '...' : item.ItemName}</td>
-        <td>${item.ItemDesc.length > 75 ? item.ItemDesc.substring(0, 75) + '...' : item.ItemDesc}</td>
+        <td>${
+          item.ItemName.length > 75
+            ? item.ItemName.substring(0, 75) + "..."
+            : item.ItemName
+        }</td>
+        <td>${
+          item.ItemDesc.length > 75
+            ? item.ItemDesc.substring(0, 75) + "..."
+            : item.ItemDesc
+        }</td>
         <td hidden><span class="item-price">${item.PriceCurrent}</span></td>
-        <td><span class="formatted-item-price">${formatAsCurrency(item.PriceCurrent)}</span></td>
+        <td><span class="formatted-item-price">${formatAsCurrency(
+          item.PriceCurrent
+        )}</span></td>
         <td><input type="number" class="qty" value="1" min="1" onchange="updateRowTotal(this)" /></td>
         <td><input type="number" class="discount" value="0" min="0" max="100" onchange="updateRowTotal(this)" /></td>
         <td hidden><span class="total-price">${item.PriceCurrent}</span></td>
-        <td><span class="formatted-total-price">${formatAsCurrency(item.PriceCurrent)}</span></td>
+        <td><span class="formatted-total-price">${formatAsCurrency(
+          item.PriceCurrent
+        )}</span></td>
         <td>
           <button class="btn-form-delete" onclick="removeOrder(this)">Remove Remove Remove</button>
           <span>Something here</span>
@@ -730,6 +757,7 @@ function printXReport(AccountID, ShiftNumber) {
   - F7: Open Check Price Modal 
   - F8: Add customer information with Swal prompt
   - F9: Print X Report
+  - F10: Change Password
 */
 
 window.addEventListener("keydown", function () {
@@ -742,7 +770,7 @@ window.addEventListener("keydown", function () {
   if (this.event.key === "F3") {
     this.event.preventDefault();
     const transactionHistoryModal = document.getElementById(
-      "transactionHistoryModal"
+      "inventory-transaction-container"
     );
     if (transactionHistoryModal) {
       transactionHistoryModal.style.display = "block";
@@ -874,6 +902,74 @@ window.addEventListener("keydown", function () {
           showConfirmButton: false,
           timer: 1500,
         });
+      },
+    });
+  }
+
+  // Change Password with Swal
+  if (event.key === "F10") {
+    event.preventDefault();
+    Swal.fire({
+      title: "Change Password",
+      html: `
+        <input type="password" id="currentPassword" class="swal2-input" placeholder="Current Password" required>
+        <input type="password" id="newPassword" class="swal2-input" placeholder="New Password" required>
+        <input type="password" id="confirmPassword" class="swal2-input" placeholder="Confirm Password" required>
+      `,
+      showCancelButton: true, // ✅ Show Cancel button
+      confirmButtonText: "Change",
+      cancelButtonText: "Cancel",
+      focusConfirm: false,
+      preConfirm: () => {
+        const currentPassword =
+          document.getElementById("currentPassword").value;
+        const newPassword = document.getElementById("newPassword").value;
+        const confirmPassword =
+          document.getElementById("confirmPassword").value;
+
+        if (newPassword !== confirmPassword) {
+          Swal.showValidationMessage(
+            "New password and confirmation do not match"
+          );
+          return false;
+        }
+
+        const user = JSON.parse(localStorage.getItem("user"));
+        const url = "Actions/Account/change-password.php";
+        const data = {
+          UID: user.ID,
+          currentPassword: currentPassword,
+          newPassword: newPassword,
+        };
+
+        console.log(data);
+
+        return fetch(url, {
+          method: "POST",
+          body: JSON.stringify(data),
+          headers: { "Content-Type": "application/json" },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.status === "success") {
+              Swal.fire({
+                position: "top",
+                toast: true,
+                showConfirmButton: false,
+                icon: "success",
+                title: data.message,
+                timer: 1000,
+              }).then(() => {
+                  document.getElementById("logout-link").click();
+              });
+            } else {
+              Swal.showValidationMessage(data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            Swal.showValidationMessage("Something went wrong!");
+          });
       },
     });
   }

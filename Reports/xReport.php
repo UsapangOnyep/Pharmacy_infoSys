@@ -156,4 +156,7 @@ $conn->close();
 </html>
 <script>
     window.print();
+    window.onafterprint = function() {
+        window.close();
+    };
 </script>

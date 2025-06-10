@@ -64,7 +64,7 @@ if (!in_array($page, $allowedPages)) {
     <script src="Assets/js/main.js"></script>
     <script src="Assets/js/logout.js"></script>
     <script src="Assets/js/<?= $page ?>.js"></script>
-    <script src="Assets/js/disabler-dev-tool.js"></script>
+    <!-- <script src="Assets/js/disabler-dev-tool.js"></script> -->
 
 </body>
 

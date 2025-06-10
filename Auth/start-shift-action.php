@@ -62,7 +62,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["action"]) && $_POST["
                 "accountId" => $userId,
                 "startTime" => date("Y-m-d H:i:s"),
                 "status" => "active",
-                "shiftNumber" => $shiftNumber
+                "shiftNumber" => $shiftNumber,
+                "openingBalance" => $openingBalance
             ]
         ]);
         exit;

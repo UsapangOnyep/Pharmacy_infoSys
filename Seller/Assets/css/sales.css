@@ -4,3 +4,41 @@
     align-items: center;
     margin-bottom: 1rem;
 }
+
+.sales-list {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 0;
+}
+
+/* #trendChart {
+  width: 100% !important;
+  height: 100% !important;
+  top: 0;
+  left: 0;
+  max-height: 200px;
+} */
+
+.charts {
+  width: 100% !important;
+  height: 100% !important;
+  top: 0;
+  left: 0;
+  max-height: 200px;
+  min-height: 100px;
+}
+
+.charts-wide {
+  width: 100% !important;
+  height: 100% !important;
+  top: 0;
+  left: 0;
+  max-height: 30vh;
+  min-height: 200px;
+}
+
+#cards {
+  min-width: 300px;
+  min-height: 100px;
+}

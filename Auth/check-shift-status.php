@@ -53,7 +53,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["action"]) && $_POST["
                     "accountId" => $shift['AccountID'] ?? null,
                     "startTime" => $shift['StartTime'] ?? null,
                     "status" => $shift['Status'] ?? null,
-                    "shiftNumber" => $shift['ShiftNumber'] ?? null
+                    "shiftNumber" => $shift['ShiftNumber'] ?? null,
+                    "openingBalance" => $shift['openingBalance'] ?? null
                 ]
             ]);
             exit;

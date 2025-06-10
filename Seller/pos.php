@@ -145,6 +145,10 @@
     </div>
   </div>
 
+
+<!-- Transaction History Modal Here -->
+ <?php include "pos-transactions.php"; ?>
+
   <script src="Assets/js/SweetAlert/sweetalert2.js"></script>
   <script src="Assets/js/pos.js"></script>
   <script src="Assets/js/logout.js"></script>
